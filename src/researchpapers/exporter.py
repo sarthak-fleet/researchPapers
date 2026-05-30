@@ -95,7 +95,8 @@ def export_all(settings: Settings, out_dir: Path, *, top: int = 200) -> list[Pat
         rows = c.query(
             f"""
             SELECT
-                arxiv_id, title, citation_count, primary_category, submitted_date,
+                arxiv_id, title, citation_count, primary_category,
+                effective_date(source, arxiv_id, submitted_date) AS submitted_date,
                 in_corpus_degree, pagerank_score, katz_score,
                 openalex_tags, openalex_keywords
             FROM papers FINAL
@@ -203,7 +204,7 @@ def export_all(settings: Settings, out_dir: Path, *, top: int = 200) -> list[Pat
 
         # ---------- 7c. Temporal evolution ----------
         ppy = c.query(
-            "SELECT toYear(submitted_date) AS year, count() AS n FROM papers FINAL WHERE source='arxiv' AND submitted_date IS NOT NULL GROUP BY year ORDER BY year"
+            "SELECT effective_year(source, arxiv_id, submitted_date) AS year, count() AS n FROM papers FINAL WHERE source='arxiv' AND submitted_date IS NOT NULL GROUP BY year ORDER BY year"
         ).result_rows
         papers_per_year = [{"year": int(r[0]), "n": int(r[1])} for r in ppy]
 
@@ -213,18 +214,22 @@ def export_all(settings: Settings, out_dir: Path, *, top: int = 200) -> list[Pat
         top6_cids = [int(r[0]) for r in top6_rows]
 
         cy = c.query(
-            "SELECT toYear(submitted_date) AS year, community_id, count() AS n FROM papers FINAL WHERE source='arxiv' AND submitted_date IS NOT NULL AND community_id IN %(cids)s GROUP BY year, community_id ORDER BY year, community_id",
+            "SELECT effective_year(source, arxiv_id, submitted_date) AS year, community_id, count() AS n FROM papers FINAL WHERE source='arxiv' AND submitted_date IS NOT NULL AND community_id IN %(cids)s GROUP BY year, community_id ORDER BY year, community_id",
             parameters={"cids": top6_cids},
         ).result_rows
         community_years = [{"year": int(r[0]), "community_id": int(r[1]), "n": int(r[2])} for r in cy]
 
         tpy = c.query(
             """
-            SELECT toYear(submitted_date) AS year, argMax(arxiv_id, pagerank_score) AS arxiv_id,
+            SELECT year, argMax(arxiv_id, pagerank_score) AS arxiv_id,
                    argMax(title, pagerank_score) AS title, max(pagerank_score) AS max_pr,
                    argMax(citation_count, pagerank_score) AS citation_count
-            FROM papers FINAL
-            WHERE source='arxiv' AND submitted_date IS NOT NULL AND pagerank_score IS NOT NULL
+            FROM (
+              SELECT effective_year(source, arxiv_id, submitted_date) AS year,
+                     arxiv_id, title, pagerank_score, citation_count
+              FROM papers FINAL
+              WHERE source='arxiv' AND submitted_date IS NOT NULL AND pagerank_score IS NOT NULL
+            )
             GROUP BY year ORDER BY year
             """
         ).result_rows
@@ -235,12 +240,12 @@ def export_all(settings: Settings, out_dir: Path, *, top: int = 200) -> list[Pat
 
         cpy = c.query(
             """
-            SELECT toYear(submitted_date) AS year, count() AS n,
-                   round(avg(citation_count / greatest((today() - submitted_date) / 365.25, 0.25)), 1) AS mean_cpy,
-                   round(quantile(0.9)(citation_count / greatest((today() - submitted_date) / 365.25, 0.25)), 1) AS p90_cpy
+            SELECT effective_year(source, arxiv_id, submitted_date) AS year, count() AS n,
+                   round(avg(citation_count / greatest((today() - effective_date(source, arxiv_id, submitted_date)) / 365.25, 0.25)), 1) AS mean_cpy,
+                   round(quantile(0.9)(citation_count / greatest((today() - effective_date(source, arxiv_id, submitted_date)) / 365.25, 0.25)), 1) AS p90_cpy
             FROM papers FINAL
             WHERE source='arxiv' AND submitted_date IS NOT NULL AND citation_count IS NOT NULL
-              AND toYear(submitted_date) >= 2005
+              AND effective_year(source, arxiv_id, submitted_date) >= 2005
             GROUP BY year ORDER BY year
             """
         ).result_rows
@@ -333,7 +338,7 @@ def export_all(settings: Settings, out_dir: Path, *, top: int = 200) -> list[Pat
                 parameters={"cid": cid},
             ).result_rows
             years_for = c.query(
-                "SELECT toYear(submitted_date) AS year, count() AS n FROM papers FINAL WHERE source='arxiv' AND community_id = %(cid)s AND submitted_date IS NOT NULL GROUP BY year ORDER BY year",
+                "SELECT effective_year(source, arxiv_id, submitted_date) AS year, count() AS n FROM papers FINAL WHERE source='arxiv' AND community_id = %(cid)s AND submitted_date IS NOT NULL GROUP BY year ORDER BY year",
                 parameters={"cid": cid},
             ).result_rows
             comm_drills[str(cid)] = {

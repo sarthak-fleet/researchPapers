@@ -540,15 +540,6 @@
     "primary_topic": "Natural Language Processing Techniques"
   },
   {
-    "title": "Quantum Computation and Quantum Information",
-    "global_citations": 8412,
-    "in_corpus_citations": 1700,
-    "arxiv_id": null,
-    "doi": "https://doi.org/10.1017/cbo9780511976667",
-    "publication_year": 2012,
-    "primary_topic": "Quantum Computing Algorithms and Architecture"
-  },
-  {
     "title": "Diagnosing Non-Intermittent Anomalies in Reinforcement Learning Policy Executions (Short Paper)",
     "global_citations": 11299,
     "in_corpus_citations": 1700,
@@ -556,6 +547,15 @@
     "doi": "https://doi.org/10.4230/oasics.dx.2024.16",
     "publication_year": 2017,
     "primary_topic": "Reinforcement Learning in Robotics"
+  },
+  {
+    "title": "Quantum Computation and Quantum Information",
+    "global_citations": 8412,
+    "in_corpus_citations": 1700,
+    "arxiv_id": null,
+    "doi": "https://doi.org/10.1017/cbo9780511976667",
+    "publication_year": 2012,
+    "primary_topic": "Quantum Computing Algorithms and Architecture"
   },
   {
     "title": "DeepLab: Semantic Image Segmentation with Deep Convolutional Nets, Atrous Convolution, and Fully Connected CRFs",
@@ -1125,15 +1125,6 @@
     "primary_topic": "Human Pose and Action Recognition"
   },
   {
-    "title": "The quantum internet",
-    "global_citations": 5808,
-    "in_corpus_citations": 1135,
-    "arxiv_id": "0806.4195",
-    "doi": "https://doi.org/10.1038/nature07127",
-    "publication_year": 2008,
-    "primary_topic": "Quantum Information and Cryptography"
-  },
-  {
     "title": "Regression Shrinkage and Selection Via the Lasso",
     "global_citations": 51496,
     "in_corpus_citations": 1135,
@@ -1141,6 +1132,15 @@
     "doi": "https://doi.org/10.1111/j.2517-6161.1996.tb02080.x",
     "publication_year": 1996,
     "primary_topic": "Statistical Methods and Inference"
+  },
+  {
+    "title": "The quantum internet",
+    "global_citations": 5808,
+    "in_corpus_citations": 1135,
+    "arxiv_id": "0806.4195",
+    "doi": "https://doi.org/10.1038/nature07127",
+    "publication_year": 2008,
+    "primary_topic": "Quantum Information and Cryptography"
   },
   {
     "title": "Can Quantum-Mechanical Description of Physical Reality Be Considered Complete?",
@@ -1422,15 +1422,6 @@
     "primary_topic": "Speech Recognition and Synthesis"
   },
   {
-    "title": "Deep Neural Networks for Acoustic Modeling in Speech Recognition: The Shared Views of Four Research Groups",
-    "global_citations": 10281,
-    "in_corpus_citations": 1016,
-    "arxiv_id": null,
-    "doi": "https://doi.org/10.1109/msp.2012.2205597",
-    "publication_year": 2012,
-    "primary_topic": "Speech Recognition and Synthesis"
-  },
-  {
     "title": "Conditional Random Fields: Probabilistic Models for Segmenting and Labeling Sequence Data",
     "global_citations": 12996,
     "in_corpus_citations": 1016,
@@ -1438,6 +1429,15 @@
     "doi": null,
     "publication_year": 2001,
     "primary_topic": "Natural Language Processing Techniques"
+  },
+  {
+    "title": "Deep Neural Networks for Acoustic Modeling in Speech Recognition: The Shared Views of Four Research Groups",
+    "global_citations": 10281,
+    "in_corpus_citations": 1016,
+    "arxiv_id": null,
+    "doi": "https://doi.org/10.1109/msp.2012.2205597",
+    "publication_year": 2012,
+    "primary_topic": "Speech Recognition and Synthesis"
   },
   {
     "title": "TensorFlow: Large-Scale Machine Learning on Heterogeneous Distributed Systems",
@@ -1647,15 +1647,6 @@
     "primary_topic": "Multimodal Machine Learning Applications"
   },
   {
-    "title": "Accurate, Large Minibatch SGD: Training ImageNet in 1 Hour",
-    "global_citations": 2619,
-    "in_corpus_citations": 875,
-    "arxiv_id": "1706.02677",
-    "doi": "https://doi.org/10.48550/arxiv.1706.02677",
-    "publication_year": 2017,
-    "primary_topic": "Advanced Neural Network Applications"
-  },
-  {
     "title": "Theory of open quantum systems",
     "global_citations": 6166,
     "in_corpus_citations": 875,
@@ -1663,6 +1654,15 @@
     "doi": "https://doi.org/10.1063/1.1474579",
     "publication_year": 2002,
     "primary_topic": "Spectroscopy and Quantum Chemical Studies"
+  },
+  {
+    "title": "Accurate, Large Minibatch SGD: Training ImageNet in 1 Hour",
+    "global_citations": 2619,
+    "in_corpus_citations": 875,
+    "arxiv_id": "1706.02677",
+    "doi": "https://doi.org/10.48550/arxiv.1706.02677",
+    "publication_year": 2017,
+    "primary_topic": "Advanced Neural Network Applications"
   },
   {
     "title": "Unsupervised Representation Learning with Deep Convolutional Generative\\n Adversarial Networks",

@@ -1,58 +1,14 @@
 [
   {
-    "paper_id": "arxiv:1706.03762",
-    "source": "arxiv",
-    "title": "Attention Is All You Need",
-    "citation_count": 6551,
-    "submitted_date": "2025-08-23",
-    "cites_per_year": 8545.5,
-    "avg_rating": null,
-    "pagerank": 0.0007356084523064843,
-    "hotness": 6.148
-  },
-  {
-    "paper_id": "arxiv:2005.11401",
-    "source": "arxiv",
-    "title": "Affordance-Compiled Intelligence: Observable-Only Cognitive Impedance Matching for No-Meta LLM-Integrated Systems",
-    "citation_count": 2971,
-    "submitted_date": "2025-11-04",
-    "cites_per_year": 5242.3,
-    "avg_rating": null,
-    "pagerank": 3.7445258200099835e-05,
-    "hotness": 4.507
-  },
-  {
-    "paper_id": "arxiv:2303.18223",
-    "source": "arxiv",
-    "title": "A Survey of Large Language Models",
-    "citation_count": 1398,
-    "submitted_date": "2026-05-09",
-    "cites_per_year": 5592.0,
-    "avg_rating": null,
-    "pagerank": 3.7922228082556528e-06,
-    "hotness": 4.472
-  },
-  {
-    "paper_id": "arxiv:1611.09268",
-    "source": "arxiv",
-    "title": "Analysis of Points of Interests Recommended for Leisure Walk Descriptions",
-    "citation_count": 1289,
-    "submitted_date": "2024-10-10",
-    "cites_per_year": 788.6,
-    "avg_rating": null,
-    "pagerank": 0.00012503820486016548,
-    "hotness": 3.736
-  },
-  {
     "paper_id": "arxiv:2302.13971",
     "source": "arxiv",
     "title": "LLaMA: Open and Efficient Foundation Language Models",
     "citation_count": 3890,
     "submitted_date": "2023-02-27",
-    "cites_per_year": 1196.0,
+    "cites_per_year": 1170.4,
     "avg_rating": null,
     "pagerank": 1.4555882377539091e-05,
-    "hotness": 3.723
+    "hotness": 3.712
   },
   {
     "paper_id": "arxiv:2603.08623",
@@ -71,10 +27,10 @@
     "title": "Llama 2: Open Foundation and Fine-Tuned Chat Models",
     "citation_count": 2614,
     "submitted_date": "2023-07-18",
-    "cites_per_year": 911.9,
+    "cites_per_year": 897.3,
     "avg_rating": null,
     "pagerank": 7.879435223603578e-06,
-    "hotness": 3.574
+    "hotness": 3.566
   },
   {
     "paper_id": "arxiv:2303.08774",
@@ -82,32 +38,21 @@
     "title": "GPT-4 Technical Report",
     "citation_count": 2335,
     "submitted_date": "2023-03-15",
-    "cites_per_year": 727.7,
+    "cites_per_year": 719.1,
     "avg_rating": null,
     "pagerank": 1.2675808261646362e-05,
-    "hotness": 3.471
+    "hotness": 3.465
   },
   {
-    "paper_id": "arxiv:2310.01728",
+    "paper_id": "arxiv:2402.00687",
     "source": "arxiv",
-    "title": "TimeLLM: Time Series Forecasting by Reprogramming Large Language Models",
-    "citation_count": 128,
-    "submitted_date": "2026-05-18",
-    "cites_per_year": 512.0,
+    "title": "A Review on the Use of Blockchain for the Internet of Things",
+    "citation_count": 1070,
+    "submitted_date": "2018-01-01",
+    "cites_per_year": 460.3,
     "avg_rating": null,
-    "pagerank": 1.2948457590499541e-06,
-    "hotness": 3.273
-  },
-  {
-    "paper_id": "arxiv:2405.18346",
-    "source": "arxiv",
-    "title": "Intelligent Clinical Documentation: Harnessing Generative AI for Patient-Centric Clinical Note Generation",
-    "citation_count": 1017,
-    "submitted_date": "2024-05-28",
-    "cites_per_year": 507.5,
-    "avg_rating": null,
-    "pagerank": 1.2948457590499541e-06,
-    "hotness": 3.268
+    "pagerank": 2.9420363295691696e-05,
+    "hotness": 3.276
   },
   {
     "paper_id": "arxiv:2305.13563",
@@ -115,32 +60,43 @@
     "title": "Efficient Multi-Scale Attention Module with Cross-Spatial Learning",
     "citation_count": 1521,
     "submitted_date": "2023-05-05",
-    "cites_per_year": 495.6,
+    "cites_per_year": 493.8,
     "avg_rating": null,
     "pagerank": 1.2948457590499541e-06,
-    "hotness": 3.256
+    "hotness": 3.255
   },
   {
-    "paper_id": "arxiv:1409.3319",
+    "paper_id": "arxiv:2405.18346",
     "source": "arxiv",
-    "title": "International Journal of Computer Science and Information Technology",
-    "citation_count": 112,
-    "submitted_date": "2026-05-06",
-    "cites_per_year": 448.0,
+    "title": "Intelligent Clinical Documentation: Harnessing Generative AI for Patient-Centric Clinical Note Generation",
+    "citation_count": 1017,
+    "submitted_date": "2024-05-28",
+    "cites_per_year": 489.4,
     "avg_rating": null,
     "pagerank": 1.2948457590499541e-06,
-    "hotness": 3.206
+    "hotness": 3.25
   },
   {
-    "paper_id": "arxiv:2003.07311",
+    "paper_id": "arxiv:2303.18223",
     "source": "arxiv",
-    "title": "associated_data_Investigating the Effectiveness of clDice Loss for Road Crack Segmentation",
-    "citation_count": 416,
-    "submitted_date": "2025-06-19",
-    "cites_per_year": 440.4,
+    "title": "A Survey of Large Language Models",
+    "citation_count": 1398,
+    "submitted_date": "2026-05-09",
+    "cites_per_year": 430.5,
     "avg_rating": null,
-    "pagerank": 2.076911180647133e-06,
-    "hotness": 3.199
+    "pagerank": 3.7922228082556528e-06,
+    "hotness": 3.191
+  },
+  {
+    "paper_id": "arxiv:2402.07956",
+    "source": "arxiv",
+    "title": "Educational data mining and learning analytics: An updated survey",
+    "citation_count": 947,
+    "submitted_date": "2020-01-13",
+    "cites_per_year": 407.4,
+    "avg_rating": null,
+    "pagerank": 1.1298350620765632e-05,
+    "hotness": 3.179
   },
   {
     "paper_id": "arxiv:2309.07930",
@@ -148,10 +104,10 @@
     "title": "Generative AI",
     "citation_count": 1127,
     "submitted_date": "2023-09-12",
-    "cites_per_year": 415.4,
+    "cites_per_year": 410.8,
     "avg_rating": null,
     "pagerank": 2.7657968653700736e-06,
-    "hotness": 3.171
+    "hotness": 3.166
   },
   {
     "paper_id": "arxiv:2312.00752",
@@ -165,6 +121,28 @@
     "hotness": 3.147
   },
   {
+    "paper_id": "arxiv:2605.06714",
+    "source": "arxiv",
+    "title": "Edge deep learning in computer vision and medical diagnostics: a comprehensive survey",
+    "citation_count": 96,
+    "submitted_date": "2025-01-17",
+    "cites_per_year": 384.0,
+    "avg_rating": null,
+    "pagerank": 1.2948457590499541e-06,
+    "hotness": 3.129
+  },
+  {
+    "paper_id": "arxiv:2605.08679",
+    "source": "arxiv",
+    "title": "Attention-based graph neural networks: a survey",
+    "citation_count": 92,
+    "submitted_date": "2023-08-21",
+    "cites_per_year": 368.0,
+    "avg_rating": null,
+    "pagerank": 1.5093594620549714e-06,
+    "hotness": 3.108
+  },
+  {
     "paper_id": "arxiv:2501.12948",
     "source": "arxiv",
     "title": "Can Open Large Language Models Catch Vulnerabilities?",
@@ -176,15 +154,26 @@
     "hotness": 3.074
   },
   {
+    "paper_id": "arxiv:2403.03196",
+    "source": "arxiv",
+    "title": "SmartSantander: IoT experimentation over a smart city testbed",
+    "citation_count": 684,
+    "submitted_date": "2014-01-02",
+    "cites_per_year": 304.7,
+    "avg_rating": null,
+    "pagerank": 2.5011561633774225e-05,
+    "hotness": 3.061
+  },
+  {
     "paper_id": "arxiv:2304.07193",
     "source": "arxiv",
     "title": "DINOv2: Learning Robust Visual Features without Supervision",
     "citation_count": 1029,
     "submitted_date": "2023-04-14",
-    "cites_per_year": 329.1,
+    "cites_per_year": 325.4,
     "avg_rating": null,
     "pagerank": 3.5548480083939477e-06,
-    "hotness": 3.057
+    "hotness": 3.051
   },
   {
     "paper_id": "arxiv:2312.11805",
@@ -192,21 +181,10 @@
     "title": "Gemini: A Family of Highly Capable Multimodal Models",
     "citation_count": 806,
     "submitted_date": "2023-12-19",
-    "cites_per_year": 329.7,
+    "cites_per_year": 323.2,
     "avg_rating": null,
     "pagerank": 3.0647677912962002e-06,
-    "hotness": 3.057
-  },
-  {
-    "paper_id": "arxiv:1712.03080",
-    "source": "arxiv",
-    "title": "International Journal of Advanced Computer Science and Applications",
-    "citation_count": 178,
-    "submitted_date": "2025-11-14",
-    "cites_per_year": 330.0,
-    "avg_rating": null,
-    "pagerank": 1.2948457590499541e-06,
-    "hotness": 3.054
+    "hotness": 3.047
   },
   {
     "paper_id": "arxiv:2410.17725",
@@ -214,21 +192,10 @@
     "title": "YOLOv11: An Overview of the Key Architectural Enhancements",
     "citation_count": 489,
     "submitted_date": "2024-10-23",
-    "cites_per_year": 305.8,
+    "cites_per_year": 294.7,
     "avg_rating": null,
     "pagerank": 1.2948457590499541e-06,
-    "hotness": 3.016
-  },
-  {
-    "paper_id": "arxiv:2304.03198",
-    "source": "arxiv",
-    "title": "RFAConv: Receptive-field attention convolution for improving convolutional neural networks",
-    "citation_count": 91,
-    "submitted_date": "2026-02-05",
-    "cites_per_year": 291.6,
-    "avg_rating": null,
-    "pagerank": 1.2948457590499541e-06,
-    "hotness": 2.992
+    "hotness": 2.997
   },
   {
     "paper_id": "arxiv:2301.12597",
@@ -236,21 +203,10 @@
     "title": "BLIP-2: Bootstrapping Language-Image Pre-training with Frozen Image Encoders and Large Language Models",
     "citation_count": 914,
     "submitted_date": "2023-01-30",
-    "cites_per_year": 274.5,
+    "cites_per_year": 268.1,
     "avg_rating": null,
     "pagerank": 2.9150855263088736e-06,
-    "hotness": 2.965
-  },
-  {
-    "paper_id": "arxiv:1209.1734",
-    "source": "arxiv",
-    "title": "International Journal on Soft Computing",
-    "citation_count": 128,
-    "submitted_date": "2025-12-09",
-    "cites_per_year": 271.8,
-    "avg_rating": null,
-    "pagerank": 1.7238731650599889e-06,
-    "hotness": 2.958
+    "hotness": 2.953
   },
   {
     "paper_id": "arxiv:2312.10997",
@@ -258,10 +214,32 @@
     "title": "Retrieval-Augmented Generation for Large Language Models: A Survey",
     "citation_count": 642,
     "submitted_date": "2023-12-18",
-    "cites_per_year": 262.3,
+    "cites_per_year": 257.4,
     "avg_rating": null,
     "pagerank": 2.2288054198256454e-06,
-    "hotness": 2.941
+    "hotness": 2.932
+  },
+  {
+    "paper_id": "arxiv:2605.11989",
+    "source": "arxiv",
+    "title": "A Transfer Learning Evaluation of Deep Neural Networks for Image Classification",
+    "citation_count": 64,
+    "submitted_date": "2022-01-14",
+    "cites_per_year": 256.0,
+    "avg_rating": null,
+    "pagerank": 1.2948457590499541e-06,
+    "hotness": 2.927
+  },
+  {
+    "paper_id": "arxiv:2601.17013",
+    "source": "arxiv",
+    "title": "Private Accountability in an Age of Artificial Intelligence",
+    "citation_count": 100,
+    "submitted_date": "2020-10-19",
+    "cites_per_year": 245.1,
+    "avg_rating": null,
+    "pagerank": 1.2948457590499541e-06,
+    "hotness": 2.906
   },
   {
     "paper_id": "arxiv:2412.09315",
@@ -269,10 +247,21 @@
     "title": "Beware of metacognitive laziness: Effects of generative artificial intelligence on learning motivation, processes, and performance",
     "citation_count": 365,
     "submitted_date": "2024-12-10",
-    "cites_per_year": 248.7,
+    "cites_per_year": 244.6,
     "avg_rating": null,
     "pagerank": 1.2948457590499541e-06,
-    "hotness": 2.913
+    "hotness": 2.904
+  },
+  {
+    "paper_id": "arxiv:2402.00922",
+    "source": "arxiv",
+    "title": "Towards Post-Quantum Blockchain: A Review on Blockchain Cryptography Resistant to Quantum Computing Attacks",
+    "citation_count": 553,
+    "submitted_date": "2020-01-01",
+    "cites_per_year": 237.9,
+    "avg_rating": null,
+    "pagerank": 3.5825349226392946e-06,
+    "hotness": 2.895
   },
   {
     "paper_id": "arxiv:2302.11382",
@@ -280,10 +269,21 @@
     "title": "A Prompt Pattern Catalog to Enhance Prompt Engineering with ChatGPT",
     "citation_count": 787,
     "submitted_date": "2023-02-21",
-    "cites_per_year": 240.7,
+    "cites_per_year": 236.8,
     "avg_rating": null,
     "pagerank": 3.7014903712045097e-06,
-    "hotness": 2.901
+    "hotness": 2.893
+  },
+  {
+    "paper_id": "arxiv:2410.03205",
+    "source": "arxiv",
+    "title": "A Tutorial On the design, experimentation and application of metaheuristic algorithms to real-World optimization problems",
+    "citation_count": 387,
+    "submitted_date": "2021-04-28",
+    "cites_per_year": 233.3,
+    "avg_rating": null,
+    "pagerank": 1.2948457590499541e-06,
+    "hotness": 2.881
   },
   {
     "paper_id": "arxiv:2404.19756",
@@ -291,43 +291,21 @@
     "title": "KAN: Kolmogorov-Arnold Networks",
     "citation_count": 495,
     "submitted_date": "2024-04-30",
-    "cites_per_year": 237.9,
+    "cites_per_year": 229.1,
     "avg_rating": null,
     "pagerank": 1.2948457590499541e-06,
-    "hotness": 2.891
-  },
-  {
-    "paper_id": "arxiv:1409.7055",
-    "source": "arxiv",
-    "title": "Liouville Quantum Gravity as a Mating of Trees",
-    "citation_count": 122,
-    "submitted_date": "2025-11-20",
-    "cites_per_year": 233.3,
-    "avg_rating": null,
-    "pagerank": 5.79963352215532e-06,
-    "hotness": 2.89
-  },
-  {
-    "paper_id": "arxiv:2403.17888",
-    "source": "arxiv",
-    "title": "2D Gaussian Splatting for Geometrically Accurate Radiance Fields",
-    "citation_count": 430,
-    "submitted_date": "2024-07-12",
-    "cites_per_year": 228.6,
-    "avg_rating": null,
-    "pagerank": 1.7271082727620098e-06,
     "hotness": 2.872
   },
   {
-    "paper_id": "arxiv:2202.07082",
+    "paper_id": "arxiv:2405.00010",
     "source": "arxiv",
-    "title": "Graph Neural Networks for Graphs With Heterophily: A Survey",
-    "citation_count": 90,
-    "submitted_date": "2026-01-01",
-    "cites_per_year": 220.6,
+    "title": "A Review on Industrial Augmented Reality Systems for the Industry 4.0 Shipyard",
+    "citation_count": 437,
+    "submitted_date": "2018-01-01",
+    "cites_per_year": 210.3,
     "avg_rating": null,
-    "pagerank": 1.669973581724963e-06,
-    "hotness": 2.854
+    "pagerank": 9.42353631236074e-06,
+    "hotness": 2.845
   },
   {
     "paper_id": "arxiv:2304.08485",
@@ -335,10 +313,10 @@
     "title": "Visual Instruction Tuning",
     "citation_count": 676,
     "submitted_date": "2023-04-17",
-    "cites_per_year": 216.8,
+    "cites_per_year": 213.8,
     "avg_rating": null,
     "pagerank": 3.1199763318283847e-06,
-    "hotness": 2.848
+    "hotness": 2.841
   },
   {
     "paper_id": "arxiv:2512.02383",
@@ -346,10 +324,43 @@
     "title": "Reinforcement Learning in POMDP's via Direct Gradient Ascent",
     "citation_count": 88,
     "submitted_date": "2025-12-02",
-    "cites_per_year": 179.6,
+    "cites_per_year": 178.6,
     "avg_rating": null,
     "pagerank": 4.702446742319444e-05,
-    "hotness": 2.842
+    "hotness": 2.839
+  },
+  {
+    "paper_id": "arxiv:2403.19859",
+    "source": "arxiv",
+    "title": "Secure link state routing for mobile ad hoc networks",
+    "citation_count": 466,
+    "submitted_date": "2003-08-27",
+    "cites_per_year": 207.6,
+    "avg_rating": null,
+    "pagerank": 8.503379683204759e-06,
+    "hotness": 2.837
+  },
+  {
+    "paper_id": "arxiv:2603.00730",
+    "source": "arxiv",
+    "title": "MO-MIX: Multi-Objective Multi-Agent Cooperative Decision-Making With Deep Reinforcement Learning",
+    "citation_count": 51,
+    "submitted_date": "2023-06-07",
+    "cites_per_year": 204.0,
+    "avg_rating": null,
+    "pagerank": 1.2948457590499541e-06,
+    "hotness": 2.814
+  },
+  {
+    "paper_id": "arxiv:2303.09491",
+    "source": "arxiv",
+    "title": "Challenges and opportunities in quantum machine learning",
+    "citation_count": 635,
+    "submitted_date": "2022-09-15",
+    "cites_per_year": 195.6,
+    "avg_rating": null,
+    "pagerank": 3.131648486589636e-06,
+    "hotness": 2.797
   },
   {
     "paper_id": "arxiv:2605.05124",
@@ -363,15 +374,37 @@
     "hotness": 2.796
   },
   {
+    "paper_id": "arxiv:2403.17888",
+    "source": "arxiv",
+    "title": "2D Gaussian Splatting for Geometrically Accurate Radiance Fields",
+    "citation_count": 430,
+    "submitted_date": "2024-07-12",
+    "cites_per_year": 191.5,
+    "avg_rating": null,
+    "pagerank": 1.7271082727620098e-06,
+    "hotness": 2.784
+  },
+  {
+    "paper_id": "arxiv:2407.21783",
+    "source": "arxiv",
+    "title": "Enriching Location Representation with Detailed Semantic Information",
+    "citation_count": 363,
+    "submitted_date": "2024-01-01",
+    "cites_per_year": 190.0,
+    "avg_rating": null,
+    "pagerank": 1.849257935126302e-06,
+    "hotness": 2.78
+  },
+  {
     "paper_id": "arxiv:2305.10601",
     "source": "arxiv",
     "title": "Tree of Thoughts: Deliberate Problem Solving with Large Language Models",
     "citation_count": 564,
     "submitted_date": "2023-05-17",
-    "cites_per_year": 185.8,
+    "cites_per_year": 183.1,
     "avg_rating": null,
     "pagerank": 2.4438917111904136e-06,
-    "hotness": 2.77
+    "hotness": 2.763
   },
   {
     "paper_id": "arxiv:2411.01545",
@@ -379,10 +412,10 @@
     "title": "Proceedings of the 32nd ACM International Conference on Multimedia",
     "citation_count": 287,
     "submitted_date": "2024-10-26",
-    "cites_per_year": 180.4,
+    "cites_per_year": 182.3,
     "avg_rating": null,
     "pagerank": 2.045643719567515e-06,
-    "hotness": 2.755
+    "hotness": 2.76
   },
   {
     "paper_id": "arxiv:2605.09519",
@@ -396,26 +429,26 @@
     "hotness": 2.742
   },
   {
-    "paper_id": "arxiv:2507.09474",
-    "source": "arxiv",
-    "title": "The CoNLL-2013 Shared Task on Grammatical Error Correction",
-    "citation_count": 147,
-    "submitted_date": "2025-07-13",
-    "cites_per_year": 167.3,
-    "avg_rating": null,
-    "pagerank": 7.968429416355419e-06,
-    "hotness": 2.729
-  },
-  {
     "paper_id": "arxiv:2304.02643",
     "source": "arxiv",
     "title": "Segment Anything",
     "citation_count": 532,
     "submitted_date": "2023-04-05",
-    "cites_per_year": 168.8,
+    "cites_per_year": 168.2,
     "avg_rating": null,
     "pagerank": 4.236589831336183e-06,
-    "hotness": 2.726
+    "hotness": 2.724
+  },
+  {
+    "paper_id": "arxiv:2507.09474",
+    "source": "arxiv",
+    "title": "The CoNLL-2013 Shared Task on Grammatical Error Correction",
+    "citation_count": 147,
+    "submitted_date": "2025-07-13",
+    "cites_per_year": 161.2,
+    "avg_rating": null,
+    "pagerank": 7.968429416355419e-06,
+    "hotness": 2.71
   },
   {
     "paper_id": "arxiv:2401.09417",
@@ -423,10 +456,21 @@
     "title": "Vision Mamba: Efficient Visual Representation Learning with Bidirectional State Space Model",
     "citation_count": 392,
     "submitted_date": "2024-01-17",
-    "cites_per_year": 165.7,
+    "cites_per_year": 162.7,
     "avg_rating": null,
     "pagerank": 1.2948457590499541e-06,
-    "hotness": 2.711
+    "hotness": 2.702
+  },
+  {
+    "paper_id": "arxiv:2307.13104",
+    "source": "arxiv",
+    "title": "Software development in startup companies: A systematic mapping study",
+    "citation_count": 412,
+    "submitted_date": "2014-04-28",
+    "cites_per_year": 141.4,
+    "avg_rating": null,
+    "pagerank": 3.358707105571925e-05,
+    "hotness": 2.697
   },
   {
     "paper_id": "arxiv:2501.05407",
@@ -434,21 +478,10 @@
     "title": "On-line Policy Improvement using Monte-Carlo Search",
     "citation_count": 212,
     "submitted_date": "2025-01-09",
-    "cites_per_year": 153.0,
+    "cites_per_year": 150.6,
     "avg_rating": null,
     "pagerank": 1.5317515132258426e-05,
-    "hotness": 2.699
-  },
-  {
-    "paper_id": "arxiv:2412.19437",
-    "source": "arxiv",
-    "title": "DeepSeek-V3 Technical Report",
-    "citation_count": 222,
-    "submitted_date": "2024-12-27",
-    "cites_per_year": 156.2,
-    "avg_rating": null,
-    "pagerank": 1.4021026105524629e-06,
-    "hotness": 2.682
+    "hotness": 2.691
   },
   {
     "paper_id": "arxiv:2304.10592",
@@ -456,21 +489,10 @@
     "title": "MiniGPT-4: Enhancing Vision-Language Understanding with Advanced Large Language Models",
     "citation_count": 476,
     "submitted_date": "2023-04-20",
-    "cites_per_year": 153.0,
+    "cites_per_year": 150.5,
     "avg_rating": null,
     "pagerank": 3.3901860797682853e-06,
-    "hotness": 2.675
-  },
-  {
-    "paper_id": "arxiv:2401.10166",
-    "source": "arxiv",
-    "title": "VMamba: Visual State Space Model",
-    "citation_count": 361,
-    "submitted_date": "2024-01-18",
-    "cites_per_year": 152.8,
-    "avg_rating": null,
-    "pagerank": 1.2948457590499541e-06,
-    "hotness": 2.67
+    "hotness": 2.667
   },
   {
     "paper_id": "arxiv:2306.05685",
@@ -478,43 +500,43 @@
     "title": "Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena",
     "citation_count": 453,
     "submitted_date": "2023-06-09",
-    "cites_per_year": 152.4,
+    "cites_per_year": 151.2,
     "avg_rating": null,
     "pagerank": 1.4761433008179055e-06,
-    "hotness": 2.669
+    "hotness": 2.666
   },
   {
-    "paper_id": "arxiv:2401.03890",
+    "paper_id": "arxiv:2402.00954",
     "source": "arxiv",
-    "title": "A Survey on 3D Gaussian Splatting",
-    "citation_count": 38,
-    "submitted_date": "2026-04-09",
-    "cites_per_year": 152.0,
+    "title": "A Review on Blockchain Technologies for an Advanced and Cyber-Resilient Automotive Industry",
+    "citation_count": 343,
+    "submitted_date": "2019-01-01",
+    "cites_per_year": 147.6,
     "avg_rating": null,
-    "pagerank": 1.3867802031949614e-06,
-    "hotness": 2.668
+    "pagerank": 6.4216988324882474e-06,
+    "hotness": 2.663
   },
   {
-    "paper_id": "arxiv:2407.21783",
+    "paper_id": "arxiv:2401.10166",
     "source": "arxiv",
-    "title": "Enriching Location Representation with Detailed Semantic Information",
-    "citation_count": 363,
-    "submitted_date": "2024-01-01",
-    "cites_per_year": 150.7,
-    "avg_rating": null,
-    "pagerank": 1.849257935126302e-06,
-    "hotness": 2.665
-  },
-  {
-    "paper_id": "arxiv:2305.10721",
-    "source": "arxiv",
-    "title": "Revisiting long-term time series forecasting: an investigation on affine mapping",
-    "citation_count": 37,
-    "submitted_date": "2026-04-10",
-    "cites_per_year": 148.0,
+    "title": "VMamba: Visual State Space Model",
+    "citation_count": 361,
+    "submitted_date": "2024-01-18",
+    "cites_per_year": 149.8,
     "avg_rating": null,
     "pagerank": 1.2948457590499541e-06,
-    "hotness": 2.655
+    "hotness": 2.661
+  },
+  {
+    "paper_id": "arxiv:2412.19437",
+    "source": "arxiv",
+    "title": "DeepSeek-V3 Technical Report",
+    "citation_count": 222,
+    "submitted_date": "2024-12-27",
+    "cites_per_year": 148.8,
+    "avg_rating": null,
+    "pagerank": 1.4021026105524629e-06,
+    "hotness": 2.657
   },
   {
     "paper_id": "arxiv:2603.09910",
@@ -526,6 +548,17 @@
     "avg_rating": null,
     "pagerank": 1.2948457590499541e-06,
     "hotness": 2.655
+  },
+  {
+    "paper_id": "arxiv:2604.26624",
+    "source": "arxiv",
+    "title": "DMRlib: Easy-Coding and Efficient Resource Management for Job Malleability",
+    "citation_count": 36,
+    "submitted_date": "2020-09-09",
+    "cites_per_year": 144.0,
+    "avg_rating": null,
+    "pagerank": 2.5819279770800585e-06,
+    "hotness": 2.644
   },
   {
     "paper_id": "arxiv:2605.04664",
@@ -544,21 +577,21 @@
     "title": "Code Llama: Open Foundation Models for Code",
     "citation_count": 395,
     "submitted_date": "2023-08-24",
-    "cites_per_year": 142.8,
+    "cites_per_year": 139.7,
     "avg_rating": null,
     "pagerank": 2.3501584814077405e-06,
-    "hotness": 2.639
+    "hotness": 2.628
   },
   {
-    "paper_id": "arxiv:2401.04947",
+    "paper_id": "arxiv:2605.22310",
     "source": "arxiv",
-    "title": "Improving Tag-Clouds as Visual Information Retrieval Interfaces",
-    "citation_count": 317,
-    "submitted_date": "2024-01-10",
-    "cites_per_year": 132.9,
+    "title": "Pattern-and-root inflectional morphology: the Arabic broken plural",
+    "citation_count": 35,
+    "submitted_date": "2013-07-30",
+    "cites_per_year": 140.0,
     "avg_rating": null,
-    "pagerank": 1.275863631268461e-05,
-    "hotness": 2.624
+    "pagerank": 1.9383868680650066e-06,
+    "hotness": 2.628
   },
   {
     "paper_id": "arxiv:2604.27563",
@@ -572,15 +605,59 @@
     "hotness": 2.622
   },
   {
+    "paper_id": "arxiv:2401.04947",
+    "source": "arxiv",
+    "title": "Improving Tag-Clouds as Visual Information Retrieval Interfaces",
+    "citation_count": 317,
+    "submitted_date": "2024-01-10",
+    "cites_per_year": 131.6,
+    "avg_rating": null,
+    "pagerank": 1.275863631268461e-05,
+    "hotness": 2.619
+  },
+  {
     "paper_id": "arxiv:2310.06625",
     "source": "arxiv",
     "title": "iTransformer: Inverted Transformers Are Effective for Time Series Forecasting",
     "citation_count": 363,
     "submitted_date": "2023-10-10",
-    "cites_per_year": 137.7,
+    "cites_per_year": 136.4,
     "avg_rating": null,
     "pagerank": 1.6166163135574801e-06,
-    "hotness": 2.619
+    "hotness": 2.615
+  },
+  {
+    "paper_id": "arxiv:2402.00709",
+    "source": "arxiv",
+    "title": "Towards an Autonomous Industry 4.0 Warehouse: A UAV and Blockchain-Based System for Inventory and Traceability Applications in Big Data-Driven Supply Chain Management",
+    "citation_count": 309,
+    "submitted_date": "2019-05-25",
+    "cites_per_year": 132.9,
+    "avg_rating": null,
+    "pagerank": 3.7983604873586857e-06,
+    "hotness": 2.606
+  },
+  {
+    "paper_id": "arxiv:2412.18022",
+    "source": "arxiv",
+    "title": "Cerise: Program Verification on a Capability Machine in the Presence of Untrusted Code",
+    "citation_count": 199,
+    "submitted_date": "2021-05-12",
+    "cites_per_year": 133.4,
+    "avg_rating": null,
+    "pagerank": 3.0109553830900935e-06,
+    "hotness": 2.606
+  },
+  {
+    "paper_id": "arxiv:2605.20817",
+    "source": "arxiv",
+    "title": "Topics in non-parametric Bayesian statistics",
+    "citation_count": 33,
+    "submitted_date": "2003-05-01",
+    "cites_per_year": 132.0,
+    "avg_rating": null,
+    "pagerank": 2.5819279770800585e-06,
+    "hotness": 2.6
   },
   {
     "paper_id": "arxiv:2305.06500",
@@ -588,10 +665,21 @@
     "title": "InstructBLIP: Towards General-purpose Vision-Language Models with Instruction Tuning",
     "citation_count": 404,
     "submitted_date": "2023-05-11",
-    "cites_per_year": 132.3,
+    "cites_per_year": 131.2,
     "avg_rating": null,
     "pagerank": 1.9609672578550083e-06,
-    "hotness": 2.6
+    "hotness": 2.596
+  },
+  {
+    "paper_id": "arxiv:2307.02612",
+    "source": "arxiv",
+    "title": "Successful combination of database search and snowballing for identification of primary studies in systematic literature studies",
+    "citation_count": 380,
+    "submitted_date": "2022-03-28",
+    "cites_per_year": 130.4,
+    "avg_rating": null,
+    "pagerank": 1.6523685973916498e-06,
+    "hotness": 2.593
   },
   {
     "paper_id": "arxiv:2605.04666",
@@ -605,15 +693,26 @@
     "hotness": 2.585
   },
   {
-    "paper_id": "arxiv:2301.10051",
+    "paper_id": "arxiv:2302.04439",
     "source": "arxiv",
-    "title": "Wise-IoU: Bounding Box Regression Loss with Dynamic Focusing Mechanism",
-    "citation_count": 423,
-    "submitted_date": "2023-01-24",
-    "cites_per_year": 126.4,
+    "title": "Recent Advances in the Internet-of-Medical-Things (IoMT) Systems Security",
+    "citation_count": 419,
+    "submitted_date": "2020-12-17",
+    "cites_per_year": 126.1,
     "avg_rating": null,
-    "pagerank": 1.6166163135574801e-06,
+    "pagerank": 2.367414274075041e-06,
     "hotness": 2.577
+  },
+  {
+    "paper_id": "arxiv:2402.00790",
+    "source": "arxiv",
+    "title": "From Pre-Quantum to Post-Quantum IoT Security: A Survey on Quantum-Resistant Cryptosystems for the Internet of Things",
+    "citation_count": 290,
+    "submitted_date": "2019-12-13",
+    "cites_per_year": 124.8,
+    "avg_rating": null,
+    "pagerank": 4.3564132964879506e-06,
+    "hotness": 2.576
   },
   {
     "paper_id": "arxiv:2403.05530",
@@ -621,10 +720,10 @@
     "title": "Gemini 1.5: Unlocking multimodal understanding across millions of tokens of context",
     "citation_count": 281,
     "submitted_date": "2024-03-08",
-    "cites_per_year": 126.2,
+    "cites_per_year": 125.2,
     "avg_rating": null,
     "pagerank": 1.4213595486057671e-06,
-    "hotness": 2.576
+    "hotness": 2.572
   },
   {
     "paper_id": "arxiv:2408.00714",
@@ -638,15 +737,59 @@
     "hotness": 2.571
   },
   {
+    "paper_id": "arxiv:2301.10051",
+    "source": "arxiv",
+    "title": "Wise-IoU: Bounding Box Regression Loss with Dynamic Focusing Mechanism",
+    "citation_count": 423,
+    "submitted_date": "2023-01-24",
+    "cites_per_year": 124.1,
+    "avg_rating": null,
+    "pagerank": 1.6166163135574801e-06,
+    "hotness": 2.568
+  },
+  {
+    "paper_id": "arxiv:2604.03918",
+    "source": "arxiv",
+    "title": "Measurement driven birth model for the generalized labeled multi-Bernoulli filter",
+    "citation_count": 31,
+    "submitted_date": "2016-10-01",
+    "cites_per_year": 124.0,
+    "avg_rating": null,
+    "pagerank": 1.5762740042659611e-06,
+    "hotness": 2.567
+  },
+  {
     "paper_id": "arxiv:2303.04226",
     "source": "arxiv",
     "title": "A Comprehensive Survey of AI-Generated Content (AIGC): A History of Generative AI from GAN to ChatGPT",
     "citation_count": 400,
     "submitted_date": "2023-03-07",
-    "cites_per_year": 123.8,
+    "cites_per_year": 123.2,
     "avg_rating": null,
     "pagerank": 2.766548769686148e-06,
-    "hotness": 2.569
+    "hotness": 2.566
+  },
+  {
+    "paper_id": "arxiv:2302.12452",
+    "source": "arxiv",
+    "title": "Machine Learning Based Intrusion Detection Systems for IoT Applications",
+    "citation_count": 402,
+    "submitted_date": "2019-11-30",
+    "cites_per_year": 120.9,
+    "avg_rating": null,
+    "pagerank": 5.4014214637340905e-06,
+    "hotness": 2.563
+  },
+  {
+    "paper_id": "arxiv:2405.13555",
+    "source": "arxiv",
+    "title": "A Perspective Analysis of Handwritten Signature Technology",
+    "citation_count": 246,
+    "submitted_date": "2019-01-28",
+    "cites_per_year": 118.4,
+    "avg_rating": null,
+    "pagerank": 1.048307278483453e-05,
+    "hotness": 2.562
   },
   {
     "paper_id": "arxiv:2307.06435",
@@ -654,21 +797,32 @@
     "title": "A Comprehensive Overview of Large Language Models",
     "citation_count": 357,
     "submitted_date": "2023-07-12",
-    "cites_per_year": 123.8,
+    "cites_per_year": 122.6,
     "avg_rating": null,
     "pagerank": 1.3408129811224578e-06,
-    "hotness": 2.566
+    "hotness": 2.561
   },
   {
-    "paper_id": "arxiv:2308.14921",
+    "paper_id": "arxiv:2305.00968",
     "source": "arxiv",
-    "title": "Gender bias and stereotypes in Large Language Models",
-    "citation_count": 315,
-    "submitted_date": "2023-10-13",
-    "cites_per_year": 119.8,
+    "title": "The Monadic Theory of Order",
+    "citation_count": 323,
+    "submitted_date": "1975-11-01",
+    "cites_per_year": 104.9,
     "avg_rating": null,
-    "pagerank": 2.3765092987655934e-06,
-    "hotness": 2.552
+    "pagerank": 3.7496767146526935e-05,
+    "hotness": 2.556
+  },
+  {
+    "paper_id": "arxiv:2602.19071",
+    "source": "arxiv",
+    "title": "Defining Explainable AI for Requirements Analysis",
+    "citation_count": 39,
+    "submitted_date": "2018-10-03",
+    "cites_per_year": 120.7,
+    "avg_rating": null,
+    "pagerank": 1.7475950157268619e-06,
+    "hotness": 2.554
   },
   {
     "paper_id": "arxiv:2308.02976",
@@ -676,10 +830,10 @@
     "title": "Spanish Pre-trained BERT Model and Evaluation Data",
     "citation_count": 336,
     "submitted_date": "2023-08-06",
-    "cites_per_year": 119.4,
+    "cites_per_year": 118.8,
     "avg_rating": null,
     "pagerank": 3.4879323162616455e-06,
-    "hotness": 2.552
+    "hotness": 2.55
   },
   {
     "paper_id": "arxiv:2302.04761",
@@ -687,10 +841,10 @@
     "title": "Toolformer: Language Models Can Teach Themselves to Use Tools",
     "citation_count": 385,
     "submitted_date": "2023-02-09",
-    "cites_per_year": 116.6,
+    "cites_per_year": 115.8,
     "avg_rating": null,
     "pagerank": 2.120340913964279e-06,
-    "hotness": 2.538
+    "hotness": 2.535
   },
   {
     "paper_id": "arxiv:2512.03211",
@@ -698,10 +852,10 @@
     "title": "A Multi-Agent, Policy-Gradient approach to Network Routing",
     "citation_count": 56,
     "submitted_date": "2025-12-02",
-    "cites_per_year": 114.3,
+    "cites_per_year": 113.6,
     "avg_rating": null,
     "pagerank": 3.5462809546571794e-06,
-    "hotness": 2.531
+    "hotness": 2.528
   },
   {
     "paper_id": "arxiv:2604.26818",
@@ -715,15 +869,70 @@
     "hotness": 2.526
   },
   {
+    "paper_id": "arxiv:2307.13143",
+    "source": "arxiv",
+    "title": "Evaluation and Measurement of Software Process Improvement\u2014A Systematic Literature Review",
+    "citation_count": 293,
+    "submitted_date": "2011-03-15",
+    "cites_per_year": 100.6,
+    "avg_rating": null,
+    "pagerank": 2.87391345012244e-05,
+    "hotness": 2.518
+  },
+  {
+    "paper_id": "arxiv:2308.14921",
+    "source": "arxiv",
+    "title": "Gender bias and stereotypes in Large Language Models",
+    "citation_count": 315,
+    "submitted_date": "2023-10-13",
+    "cites_per_year": 111.4,
+    "avg_rating": null,
+    "pagerank": 2.3765092987655934e-06,
+    "hotness": 2.516
+  },
+  {
+    "paper_id": "arxiv:2402.03599",
+    "source": "arxiv",
+    "title": "A Review on Internet of Things for Defense and Public Safety",
+    "citation_count": 244,
+    "submitted_date": "2016-10-05",
+    "cites_per_year": 105.0,
+    "avg_rating": null,
+    "pagerank": 1.582399121420566e-05,
+    "hotness": 2.513
+  },
+  {
     "paper_id": "arxiv:2305.09972",
     "source": "arxiv",
     "title": "Real-Time Flying Object Detection with YOLOv8",
     "citation_count": 341,
     "submitted_date": "2023-05-17",
-    "cites_per_year": 112.3,
+    "cites_per_year": 110.7,
     "avg_rating": null,
     "pagerank": 1.9383868680650066e-06,
-    "hotness": 2.519
+    "hotness": 2.512
+  },
+  {
+    "paper_id": "arxiv:2410.23533",
+    "source": "arxiv",
+    "title": "2D Empirical Transforms. Wavelets, Ridgelets, and Curvelets Revisited",
+    "citation_count": 181,
+    "submitted_date": "2014-01-01",
+    "cites_per_year": 109.1,
+    "avg_rating": null,
+    "pagerank": 4.931972536498912e-06,
+    "hotness": 2.511
+  },
+  {
+    "paper_id": "arxiv:2401.12247",
+    "source": "arxiv",
+    "title": "Exploring consumers' response to text-based chatbots in e-commerce: the moderating role of task complexity and chatbot disclosure",
+    "citation_count": 262,
+    "submitted_date": "2021-07-09",
+    "cites_per_year": 108.7,
+    "avg_rating": null,
+    "pagerank": 1.9383868680650066e-06,
+    "hotness": 2.503
   },
   {
     "paper_id": "arxiv:2303.03378",
@@ -731,10 +940,10 @@
     "title": "PaLM-E: An Embodied Multimodal Language Model",
     "citation_count": 350,
     "submitted_date": "2023-03-06",
-    "cites_per_year": 108.2,
+    "cites_per_year": 107.8,
     "avg_rating": null,
     "pagerank": 2.0991143508150538e-06,
-    "hotness": 2.501
+    "hotness": 2.499
   },
   {
     "paper_id": "arxiv:2302.04023",
@@ -742,10 +951,10 @@
     "title": "A Multitask, Multilingual, Multimodal Evaluation of ChatGPT on Reasoning, Hallucination, and Interactivity",
     "citation_count": 353,
     "submitted_date": "2023-02-08",
-    "cites_per_year": 106.8,
+    "cites_per_year": 106.2,
     "avg_rating": null,
     "pagerank": 2.523628014932213e-06,
-    "hotness": 2.495
+    "hotness": 2.492
   },
   {
     "paper_id": "arxiv:2307.01952",
@@ -753,10 +962,10 @@
     "title": "SDXL: Improving Latent Diffusion Models for High-Resolution Image Synthesis",
     "citation_count": 309,
     "submitted_date": "2023-07-04",
-    "cites_per_year": 106.4,
+    "cites_per_year": 106.1,
     "avg_rating": null,
     "pagerank": 2.0296355258356522e-06,
-    "hotness": 2.492
+    "hotness": 2.491
   },
   {
     "paper_id": "arxiv:2310.06825",
@@ -764,10 +973,10 @@
     "title": "Mistral 7B",
     "citation_count": 281,
     "submitted_date": "2023-10-10",
-    "cites_per_year": 106.6,
+    "cites_per_year": 105.6,
     "avg_rating": null,
     "pagerank": 1.4853507603856474e-06,
-    "hotness": 2.492
+    "hotness": 2.487
   },
   {
     "paper_id": "arxiv:2403.08295",
@@ -775,54 +984,54 @@
     "title": "Gemma: Open Models Based on Gemini Research and Technology",
     "citation_count": 224,
     "submitted_date": "2024-03-13",
-    "cites_per_year": 101.3,
+    "cites_per_year": 99.8,
     "avg_rating": null,
     "pagerank": 1.2948457590499541e-06,
-    "hotness": 2.466
+    "hotness": 2.459
   },
   {
-    "paper_id": "arxiv:2404.10981",
+    "paper_id": "arxiv:2406.11842",
     "source": "arxiv",
-    "title": "A Survey on Retrieval-Augmented Text Generation for Large Language Models",
-    "citation_count": 24,
-    "submitted_date": "2026-04-09",
-    "cites_per_year": 96.0,
+    "title": "The Ethics of Artificial Intelligence in Education",
+    "citation_count": 196,
+    "submitted_date": "2022-08-11",
+    "cites_per_year": 98.3,
     "avg_rating": null,
     "pagerank": 1.2948457590499541e-06,
-    "hotness": 2.44
+    "hotness": 2.452
   },
   {
-    "paper_id": "arxiv:2303.17564",
+    "paper_id": "arxiv:2310.11169",
     "source": "arxiv",
-    "title": "BloombergGPT: A Large Language Model for Finance",
-    "citation_count": 302,
-    "submitted_date": "2023-03-30",
-    "cites_per_year": 95.3,
+    "title": "MST-GAT: A multimodal spatial\u2013temporal graph attention network for time series anomaly detection",
+    "citation_count": 261,
+    "submitted_date": "2022-08-12",
+    "cites_per_year": 98.1,
     "avg_rating": null,
-    "pagerank": 1.9700380470567316e-06,
+    "pagerank": 1.2948457590499541e-06,
+    "hotness": 2.451
+  },
+  {
+    "paper_id": "arxiv:2307.02364",
+    "source": "arxiv",
+    "title": "High-rate quantum key distribution exceeding 110\u2009Mb\u2009s\u20131",
+    "citation_count": 278,
+    "submitted_date": "2023-03-13",
+    "cites_per_year": 95.4,
+    "avg_rating": null,
+    "pagerank": 1.935601342110872e-06,
     "hotness": 2.438
   },
   {
-    "paper_id": "arxiv:2402.06196",
+    "paper_id": "arxiv:2311.04633",
     "source": "arxiv",
-    "title": "Large Language Models: A Survey",
-    "citation_count": 217,
-    "submitted_date": "2024-02-09",
-    "cites_per_year": 94.2,
+    "title": "General Framework to Evaluate Unlinkability in Biometric Template Protection Systems",
+    "citation_count": 235,
+    "submitted_date": "2017-12-29",
+    "cites_per_year": 91.2,
     "avg_rating": null,
-    "pagerank": 1.2948457590499541e-06,
-    "hotness": 2.431
-  },
-  {
-    "paper_id": "arxiv:2309.11331",
-    "source": "arxiv",
-    "title": "Gold-YOLO: Efficient Object Detector via Gather-and-Distribute Mechanism",
-    "citation_count": 253,
-    "submitted_date": "2023-09-20",
-    "cites_per_year": 94.0,
-    "avg_rating": null,
-    "pagerank": 1.2948457590499541e-06,
-    "hotness": 2.43
+    "pagerank": 1.3046977504392046e-05,
+    "hotness": 2.438
   },
   {
     "paper_id": "arxiv:2605.09524",
@@ -836,15 +1045,48 @@
     "hotness": 2.43
   },
   {
+    "paper_id": "arxiv:2303.17564",
+    "source": "arxiv",
+    "title": "BloombergGPT: A Large Language Model for Finance",
+    "citation_count": 302,
+    "submitted_date": "2023-03-30",
+    "cites_per_year": 93.0,
+    "avg_rating": null,
+    "pagerank": 1.9700380470567316e-06,
+    "hotness": 2.426
+  },
+  {
+    "paper_id": "arxiv:2402.06196",
+    "source": "arxiv",
+    "title": "Large Language Models: A Survey",
+    "citation_count": 217,
+    "submitted_date": "2024-02-09",
+    "cites_per_year": 93.4,
+    "avg_rating": null,
+    "pagerank": 1.2948457590499541e-06,
+    "hotness": 2.426
+  },
+  {
+    "paper_id": "arxiv:2309.11331",
+    "source": "arxiv",
+    "title": "Gold-YOLO: Efficient Object Detector via Gather-and-Distribute Mechanism",
+    "citation_count": 253,
+    "submitted_date": "2023-09-20",
+    "cites_per_year": 92.2,
+    "avg_rating": null,
+    "pagerank": 1.2948457590499541e-06,
+    "hotness": 2.42
+  },
+  {
     "paper_id": "arxiv:2307.15818",
     "source": "arxiv",
     "title": "RT-2: Vision-Language-Action Models Transfer Web Knowledge to Robotic Control",
     "citation_count": 266,
     "submitted_date": "2023-07-28",
-    "cites_per_year": 93.7,
+    "cites_per_year": 91.3,
     "avg_rating": null,
     "pagerank": 1.954567587214106e-06,
-    "hotness": 2.429
+    "hotness": 2.416
   },
   {
     "paper_id": "arxiv:2309.07864",
@@ -852,251 +1094,9 @@
     "title": "The Rise and Potential of Large Language Model Based Agents: A Survey",
     "citation_count": 250,
     "submitted_date": "2023-09-14",
-    "cites_per_year": 92.3,
+    "cites_per_year": 91.1,
     "avg_rating": null,
     "pagerank": 1.3963954790670777e-06,
-    "hotness": 2.421
-  },
-  {
-    "paper_id": "arxiv:2208.05545",
-    "source": "arxiv",
-    "title": "The Moral Foundations Reddit Corpus",
-    "citation_count": 23,
-    "submitted_date": "2026-04-30",
-    "cites_per_year": 92.0,
-    "avg_rating": null,
-    "pagerank": 1.2948457590499541e-06,
-    "hotness": 2.419
-  },
-  {
-    "paper_id": "arxiv:2401.16407",
-    "source": "arxiv",
-    "title": "Is K-fold cross validation the best model selection method for machine learning?",
-    "citation_count": 23,
-    "submitted_date": "2026-04-23",
-    "cites_per_year": 92.0,
-    "avg_rating": null,
-    "pagerank": 1.2948457590499541e-06,
-    "hotness": 2.419
-  },
-  {
-    "paper_id": "arxiv:2305.18290",
-    "source": "arxiv",
-    "title": "Direct Preference Optimization: Your Language Model is Secretly a Reward Model",
-    "citation_count": 275,
-    "submitted_date": "2023-05-29",
-    "cites_per_year": 91.6,
-    "avg_rating": null,
-    "pagerank": 2.1027634973764753e-06,
-    "hotness": 2.418
-  },
-  {
-    "paper_id": "arxiv:2403.14735",
-    "source": "arxiv",
-    "title": "Foundation Models for Time Series Analysis: A Tutorial and Survey",
-    "citation_count": 161,
-    "submitted_date": "2024-08-24",
-    "cites_per_year": 91.3,
-    "avg_rating": null,
-    "pagerank": 1.7238731650599889e-06,
-    "hotness": 2.416
-  },
-  {
-    "paper_id": "arxiv:2302.07427",
-    "source": "arxiv",
-    "title": "Studying the effect of AI Code Generators on Supporting Novice Learners in Introductory Programming",
-    "citation_count": 277,
-    "submitted_date": "2023-04-19",
-    "cites_per_year": 89.0,
-    "avg_rating": null,
-    "pagerank": 7.797433188087858e-06,
-    "hotness": 2.415
-  },
-  {
-    "paper_id": "arxiv:2401.04722",
-    "source": "arxiv",
-    "title": "U-Mamba: Enhancing Long-range Dependency for Biomedical Image Segmentation",
-    "citation_count": 217,
-    "submitted_date": "2024-01-09",
-    "cites_per_year": 90.9,
-    "avg_rating": null,
-    "pagerank": 1.2948457590499541e-06,
-    "hotness": 2.413
-  },
-  {
-    "paper_id": "arxiv:2402.02491",
-    "source": "arxiv",
-    "title": "VM-UNet: Vision Mamba UNet for Medical Image Segmentation",
-    "citation_count": 210,
-    "submitted_date": "2024-02-04",
-    "cites_per_year": 90.7,
-    "avg_rating": null,
-    "pagerank": 1.2948457590499541e-06,
-    "hotness": 2.412
-  },
-  {
-    "paper_id": "arxiv:2406.12793",
-    "source": "arxiv",
-    "title": "ChatGLM: A Family of Large Language Models from GLM-130B to GLM-4 All Tools",
-    "citation_count": 176,
-    "submitted_date": "2024-06-18",
-    "cites_per_year": 90.4,
-    "avg_rating": null,
-    "pagerank": 1.2948457590499541e-06,
-    "hotness": 2.41
-  },
-  {
-    "paper_id": "arxiv:2405.08810",
-    "source": "arxiv",
-    "title": "Quantum computing with Qiskit",
-    "citation_count": 181,
-    "submitted_date": "2024-05-14",
-    "cites_per_year": 88.6,
-    "avg_rating": null,
-    "pagerank": 1.941678270150697e-06,
-    "hotness": 2.402
-  },
-  {
-    "paper_id": "arxiv:2401.14484",
-    "source": "arxiv",
-    "title": "Design Principles for Generative AI Applications",
-    "citation_count": 181,
-    "submitted_date": "2024-05-11",
-    "cites_per_year": 88.3,
-    "avg_rating": null,
-    "pagerank": 1.2948457590499541e-06,
-    "hotness": 2.398
-  },
-  {
-    "paper_id": "arxiv:2404.08472",
-    "source": "arxiv",
-    "title": "TSLANet: Rethinking Transformers for Time Series Representation Learning",
-    "citation_count": 22,
-    "submitted_date": "2026-05-18",
-    "cites_per_year": 88.0,
-    "avg_rating": null,
-    "pagerank": 1.2948457590499541e-06,
-    "hotness": 2.397
-  },
-  {
-    "paper_id": "arxiv:2309.01219",
-    "source": "arxiv",
-    "title": "Siren's Song in the AI Ocean: A Survey on Hallucination in Large Language Models",
-    "citation_count": 240,
-    "submitted_date": "2023-09-03",
-    "cites_per_year": 87.7,
-    "avg_rating": null,
-    "pagerank": 1.6029064252218606e-06,
-    "hotness": 2.396
-  },
-  {
-    "paper_id": "arxiv:2307.02364",
-    "source": "arxiv",
-    "title": "High-rate quantum key distribution exceeding 110\u2009Mb\u2009s\u20131",
-    "citation_count": 278,
-    "submitted_date": "2023-03-13",
-    "cites_per_year": 86.5,
-    "avg_rating": null,
-    "pagerank": 1.935601342110872e-06,
-    "hotness": 2.39
-  },
-  {
-    "paper_id": "arxiv:2401.14887",
-    "source": "arxiv",
-    "title": "The Power of Noise: Redefining Retrieval for RAG Systems",
-    "citation_count": 163,
-    "submitted_date": "2024-07-10",
-    "cites_per_year": 86.4,
-    "avg_rating": null,
-    "pagerank": 1.8219365721479967e-06,
-    "hotness": 2.389
-  },
-  {
-    "paper_id": "arxiv:2512.01203",
-    "source": "arxiv",
-    "title": "The Evolution of Learning Algorithms for Artificial Neural Networks",
-    "citation_count": 42,
-    "submitted_date": "2025-12-01",
-    "cites_per_year": 85.2,
-    "avg_rating": null,
-    "pagerank": 2.3385949916003868e-06,
-    "hotness": 2.383
-  },
-  {
-    "paper_id": "arxiv:2307.11230",
-    "source": "arxiv",
-    "title": "Quantum computing for finance",
-    "citation_count": 245,
-    "submitted_date": "2023-07-11",
-    "cites_per_year": 84.9,
-    "avg_rating": null,
-    "pagerank": 2.555664761010675e-06,
-    "hotness": 2.382
-  },
-  {
-    "paper_id": "arxiv:2408.10994",
-    "source": "arxiv",
-    "title": "Microsatellite-based real-time quantum key distribution",
-    "citation_count": 101,
-    "submitted_date": "2025-03-19",
-    "cites_per_year": 84.4,
-    "avg_rating": null,
-    "pagerank": 1.4488164753563702e-06,
-    "hotness": 2.377
-  },
-  {
-    "paper_id": "arxiv:2303.17580",
-    "source": "arxiv",
-    "title": "HuggingGPT: Solving AI Tasks with ChatGPT and its Friends in Hugging Face",
-    "citation_count": 264,
-    "submitted_date": "2023-03-30",
-    "cites_per_year": 83.3,
-    "avg_rating": null,
-    "pagerank": 1.8171607136108669e-06,
-    "hotness": 2.371
-  },
-  {
-    "paper_id": "arxiv:2402.07927",
-    "source": "arxiv",
-    "title": "A Systematic Survey of Prompt Engineering in Large Language Models: Techniques and Applications",
-    "citation_count": 193,
-    "submitted_date": "2024-02-05",
-    "cites_per_year": 83.4,
-    "avg_rating": null,
-    "pagerank": 1.3705564777576073e-06,
-    "hotness": 2.371
-  },
-  {
-    "paper_id": "arxiv:2404.15506",
-    "source": "arxiv",
-    "title": "Metric3D v2: A Versatile Monocular Geometric Foundation Model for Zero-Shot Metric Depth and Surface Normal Estimation",
-    "citation_count": 149,
-    "submitted_date": "2024-08-16",
-    "cites_per_year": 83.5,
-    "avg_rating": null,
-    "pagerank": 1.2948457590499541e-06,
-    "hotness": 2.371
-  },
-  {
-    "paper_id": "arxiv:2311.05232",
-    "source": "arxiv",
-    "title": "A Survey on Hallucination in Large Language Models: Principles, Taxonomy, Challenges, and Open Questions",
-    "citation_count": 213,
-    "submitted_date": "2023-11-09",
-    "cites_per_year": 83.4,
-    "avg_rating": null,
-    "pagerank": 1.3377484996509577e-06,
-    "hotness": 2.37
-  },
-  {
-    "paper_id": "arxiv:2303.11366",
-    "source": "arxiv",
-    "title": "Reflexion: Language Agents with Verbal Reinforcement Learning",
-    "citation_count": 264,
-    "submitted_date": "2023-03-20",
-    "cites_per_year": 82.6,
-    "avg_rating": null,
-    "pagerank": 1.8569415903539628e-06,
-    "hotness": 2.367
+    "hotness": 2.414
   }
 ]

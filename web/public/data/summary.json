@@ -5,13 +5,13 @@
   "unique_hosts": 0,
   "unique_urls": 0,
   "texts_stored": 512390,
-  "gz_size": "775.6 MB",
-  "gz_bytes": 813277426,
+  "gz_size": "1.5 GB",
+  "gz_bytes": 1558374604,
   "paper_edges": 8981698,
   "papers_remaining": 0,
   "ingest_percent": 100.0,
-  "avg_bytes_per_paper": 1587,
-  "projected_total_bytes": 813277426,
-  "projected_total_human": "775.6 MB",
-  "avg_per_paper_human": "1.5 kB"
+  "avg_bytes_per_paper": 3041,
+  "projected_total_bytes": 1558374604,
+  "projected_total_human": "1.5 GB",
+  "avg_per_paper_human": "3.0 kB"
 }

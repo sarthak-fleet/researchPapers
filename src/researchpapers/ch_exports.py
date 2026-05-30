@@ -182,7 +182,7 @@ def export_review_data(out_dir: Path) -> list[Path]:
             FROM par
             JOIN papers p ON p.paper_id = par.paper_id
             WHERE par.avg_rating >= 7.0 AND p.citation_count <= 20
-              AND toYear(p.submitted_date) >= 2024
+              AND effective_year(p.source, p.arxiv_id, p.submitted_date) >= 2024
             ORDER BY par.avg_rating DESC, p.citation_count ASC
             LIMIT 100
         """).result_rows
@@ -204,18 +204,18 @@ def export_review_data(out_dir: Path) -> list[Path]:
               GROUP BY paper_id HAVING count() >= 3
             )
             SELECT p.paper_id, p.source, p.title, p.citation_count, p.submitted_date,
-                   round(p.citation_count / greatest((today() - p.submitted_date) / 365.25, 0.25), 1) AS cpy,
+                   round(p.citation_count / greatest((today() - effective_date(p.source, p.arxiv_id, p.submitted_date)) / 365.25, 0.25), 1) AS cpy,
                    coalesce(par.avg_rating, 0) AS rating,
                    coalesce(p.pagerank_score, 0) AS pr,
                    round(
-                     0.5 * log(1 + p.citation_count / greatest((today() - p.submitted_date) / 365.25, 0.25))
+                     0.5 * log(1 + p.citation_count / greatest((today() - effective_date(p.source, p.arxiv_id, p.submitted_date)) / 365.25, 0.25))
                      + 0.3 * coalesce(par.avg_rating, 5.0) / 10
                      + 0.2 * coalesce(p.pagerank_score, 0) * 10000,
                    3) AS hotness
             FROM papers AS p FINAL
             LEFT JOIN par ON par.paper_id = p.paper_id
             WHERE p.submitted_date IS NOT NULL
-              AND toYear(p.submitted_date) >= 2023
+              AND effective_year(p.source, p.arxiv_id, p.submitted_date) >= 2023
               AND p.citation_count >= 5
             ORDER BY hotness DESC
             LIMIT 100
