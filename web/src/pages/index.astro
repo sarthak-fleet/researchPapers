@@ -399,6 +399,7 @@ const preprintCount = chSources
       <p>Built from <code class="font-mono text-foreground/70">~/Desktop/fleet/researchPapers</code> · top-N CS papers via OpenAlex · URLs via pdfminer + custom canonicalizer · charts via Chart.js · tables via TanStack + shadcn</p>
     </footer>
 
+    <script src="/api-config.js" is:inline></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" is:inline></script>
     <script type="application/json" id="data-hosts-bar" set:html={JSON.stringify(topHosts.slice(0, 30))} />
     <script type="application/json" id="data-categories" set:html={JSON.stringify(hostCategories)} />

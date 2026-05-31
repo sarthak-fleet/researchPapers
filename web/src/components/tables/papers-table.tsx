@@ -34,7 +34,10 @@ type SimilarResult = {
   similarity: number;
 };
 
-const API_BASE = "http://127.0.0.1:8000";
+const API_BASE: string =
+  (import.meta.env.PUBLIC_API_URL as string | undefined) ??
+  (typeof window !== "undefined" && (window as any).__API_BASE__) ??
+  "http://127.0.0.1:8000";
 
 function SimilarButton({ arxiv_id, title }: { arxiv_id: string; title: string }) {
   const [open, setOpen] = React.useState(false);

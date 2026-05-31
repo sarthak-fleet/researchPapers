@@ -13,7 +13,14 @@ type Result = {
   similarity: number;
 };
 
-const API_BASE = "http://127.0.0.1:8000";
+// Resolve API base in this priority:
+//   1. PUBLIC_API_URL build-time env (Cloudflare Pages / Vercel)
+//   2. window.__API_BASE__ runtime override (set via /api-config.js if present)
+//   3. Default: localhost:8000 (local dev)
+const API_BASE: string =
+  (import.meta.env.PUBLIC_API_URL as string | undefined) ??
+  (typeof window !== "undefined" && (window as any).__API_BASE__) ??
+  "http://127.0.0.1:8000";
 
 function paperUrl(paper_id: string, arxiv_id: string | null): string {
   if (arxiv_id) return `https://arxiv.org/abs/${arxiv_id}`;
