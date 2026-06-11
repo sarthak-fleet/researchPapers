@@ -36,7 +36,7 @@ def compute_and_write(damping: float = 0.85, max_iter: int = 50, tol: float = 1e
     with ch_connect() as ch:
         log.info("loading edges...")
         edges = ch.query(
-            "SELECT citing_paper_id, cited_openalex_id FROM references_paper"
+            "SELECT citing_arxiv_id, cited_openalex_id FROM references_paper"
         ).result_rows
     log.info("loaded %d edges", len(edges))
 

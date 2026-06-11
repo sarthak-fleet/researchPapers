@@ -67,7 +67,7 @@ def stats() -> dict:
             "SELECT source, count() AS n FROM papers GROUP BY source ORDER BY n DESC"
         ).result_rows
         tag_coverage = c.query("""
-            SELECT splitByChar(':', paper_id)[1] AS source, count() AS n
+            SELECT splitByChar(':', paper_id)[1] AS source, countDistinct(paper_id) AS n
             FROM paper_tags FINAL WHERE tagger='spacy_v2' GROUP BY source
         """).result_rows
         n_reviews = c.query("SELECT count() FROM openreview_reviews").result_rows[0][0]
@@ -391,9 +391,9 @@ def sleepers(
             JOIN papers p ON p.paper_id = par.paper_id
             LEFT JOIN paper_metadata_v2 AS m FINAL ON m.paper_id = p.paper_id
             WHERE par.avg_rating >= %(min_rating)s
-              AND p.citation_count <= %(max_citations)s
+              AND coalesce(nullIf(m.citation_count, 0), p.citation_count) <= %(max_citations)s
               AND effective_year(p.source, p.arxiv_id, p.submitted_date) >= %(since_year)s
-            ORDER BY par.avg_rating DESC, p.citation_count ASC
+            ORDER BY par.avg_rating DESC, citation_count ASC
             LIMIT %(limit)s
             """,
             parameters={"min_rating": min_rating, "max_citations": max_citations,
@@ -455,18 +455,28 @@ def similar_papers(
         if not rows:
             # No embedding for anchor — fall back to tag+community overlap.
             anchor = c.query(
-                "SELECT community_id, openalex_tags FROM papers FINAL WHERE paper_id = %(pid)s",
+                """
+                SELECT p.community_id, p.openalex_tags
+                FROM papers AS p FINAL
+                WHERE p.paper_id = %(pid)s
+                """,
                 parameters={"pid": paper_id},
             ).result_rows
             if anchor:
                 cid, tags = anchor[0]
                 rows = c.query(
                     """
-                    SELECT paper_id, title, source, citation_count, submitted_date, 0.0 AS similarity
-                    FROM papers FINAL
-                    WHERE paper_id != %(pid)s
-                      AND community_id = %(cid)s
-                      AND length(arrayIntersect(openalex_tags, %(tags)s)) >= 1
+                    SELECT p.paper_id,
+                           coalesce(nullIf(m.title, ''), p.title) AS title,
+                           p.source,
+                           coalesce(nullIf(m.citation_count, 0), p.citation_count) AS citation_count,
+                           p.submitted_date,
+                           0.0 AS similarity
+                    FROM papers AS p FINAL
+                    LEFT JOIN paper_metadata_v2 AS m FINAL ON m.paper_id = p.paper_id
+                    WHERE p.paper_id != %(pid)s
+                      AND p.community_id = %(cid)s
+                      AND length(arrayIntersect(p.openalex_tags, %(tags)s)) >= 1
                     ORDER BY citation_count DESC
                     LIMIT %(limit)s
                     """,
@@ -526,7 +536,7 @@ def hot_papers(
             LEFT JOIN paper_scores_v2 AS s FINAL ON s.paper_id = p.paper_id
             WHERE p.submitted_date IS NOT NULL
               AND effective_year(p.source, p.arxiv_id, p.submitted_date) >= %(year)s
-              AND p.citation_count >= 5
+              AND coalesce(nullIf(m.citation_count, 0), p.citation_count) >= 5
             ORDER BY hotness DESC
             LIMIT %(limit)s
             """,

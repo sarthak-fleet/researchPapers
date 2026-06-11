@@ -177,13 +177,15 @@ def export_review_data(out_dir: Path) -> list[Path]:
               FROM openreview_reviews WHERE rating IS NOT NULL
               GROUP BY paper_id HAVING n_reviews >= 3
             )
-            SELECT p.paper_id, p.title, par.avg_rating, par.n_reviews,
-                   p.citation_count, par.venue, par.decision, p.submitted_date
+            SELECT p.paper_id, coalesce(nullIf(m.title, ''), p.title) AS title, par.avg_rating, par.n_reviews,
+                   coalesce(nullIf(m.citation_count, 0), p.citation_count) AS citation_count,
+                   par.venue, par.decision, p.submitted_date
             FROM par
             JOIN papers p ON p.paper_id = par.paper_id
-            WHERE par.avg_rating >= 7.0 AND p.citation_count <= 20
+            LEFT JOIN paper_metadata_v2 AS m FINAL ON m.paper_id = p.paper_id
+            WHERE par.avg_rating >= 7.0 AND coalesce(nullIf(m.citation_count, 0), p.citation_count) <= 20
               AND effective_year(p.source, p.arxiv_id, p.submitted_date) >= 2024
-            ORDER BY par.avg_rating DESC, p.citation_count ASC
+            ORDER BY par.avg_rating DESC, citation_count ASC
             LIMIT 100
         """).result_rows
         sleepers = [
@@ -221,7 +223,7 @@ def export_review_data(out_dir: Path) -> list[Path]:
             LEFT JOIN paper_scores_v2 AS s FINAL ON s.paper_id = p.paper_id
             WHERE p.submitted_date IS NOT NULL
               AND effective_year(p.source, p.arxiv_id, p.submitted_date) >= 2023
-              AND p.citation_count >= 5
+              AND coalesce(nullIf(m.citation_count, 0), p.citation_count) >= 5
             ORDER BY hotness DESC
             LIMIT 100
         """).result_rows
