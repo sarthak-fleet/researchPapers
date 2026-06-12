@@ -215,6 +215,14 @@ def extract_all(settings: Settings, *, limit: int | None = None) -> tuple[int, i
             arxiv_id = row["arxiv_id"]
             pdf_path = Path(row["pdf_path"])
             if not pdf_path.exists():
+                log.warning("missing PDF for %s: %s", arxiv_id, pdf_path)
+                with conn.cursor() as cur:
+                    cur.execute(
+                        "UPDATE papers SET urls_extracted_at = %s WHERE arxiv_id = %s",
+                        (datetime.now(UTC), arxiv_id),
+                    )
+                conn.commit()
+                papers_processed += 1
                 continue
             try:
                 urls = extract_urls_from_pdf(pdf_path)
