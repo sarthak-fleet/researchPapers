@@ -17,11 +17,9 @@ Launch with:  uv run papers api-serve --port 8000
 
 from __future__ import annotations
 
-import json
 import logging
 import os
-import subprocess
-import sys
+import time
 from typing import Annotated
 
 from fastapi import FastAPI, HTTPException, Query
@@ -41,7 +39,8 @@ from researchpapers.overlays import (
 log = logging.getLogger("researchpapers.api")
 
 # Default lean: no resident ML models in the API process (~400 MB saved).
-# Semantic search spawns a one-shot encoder subprocess per request.
+# Semantic search now loads the encoder lazily IN-PROCESS on first request
+# (kept resident after that) instead of spawning a subprocess per query.
 LEAN_API = os.environ.get("PAPERS_LEAN_API", "1") != "0"
 _embedder = None
 
@@ -49,26 +48,45 @@ _embedder = None
 def _encode_query(q: str) -> list[float]:
     global _embedder
     if LEAN_API:
-        try:
-            r = subprocess.run(
-                [sys.executable, "-m", "researchpapers.encode_query", q],
-                capture_output=True,
-                text=True,
-                timeout=120,
-                check=True,
-            )
-            return json.loads(r.stdout)
-        except Exception as e:
-            raise HTTPException(
-                503,
-                "semantic search unavailable (encoder subprocess failed). "
-                "Try: uv run papers encode-query 'your query'",
-            ) from e
+        # Lazy in-process loading: the first semantic-search request pays the
+        # ~1 s model load; every subsequent request reuses the resident
+        # embedder (~10-50 ms) instead of spawning a subprocess (~2-5 s).
+        if _embedder is None:
+            try:
+                from sentence_transformers import SentenceTransformer
+
+                _embedder = SentenceTransformer("all-MiniLM-L6-v2")
+            except Exception as e:
+                raise HTTPException(
+                    503,
+                    "semantic search unavailable (encoder failed to load). "
+                    "Install sentence-transformers or run a non-lean API.",
+                ) from e
+        return _embedder.encode([q], normalize_embeddings=True)[0].tolist()
     from sentence_transformers import SentenceTransformer
 
     if _embedder is None:
         _embedder = SentenceTransformer("all-MiniLM-L6-v2")
     return _embedder.encode([q], normalize_embeddings=True)[0].tolist()
+
+
+# ---------------------------------------------------------------------------
+# Lightweight TTL cache for deterministic (parameter-only) endpoints.
+# Results are keyed by endpoint + sorted params and cached for 1 hour.
+# ---------------------------------------------------------------------------
+_cache: dict[tuple, tuple] = {}
+_cache_ttl = 3600
+
+
+def _cached(key: tuple, query_func):
+    """Return cached result if fresh, else run query_func and cache it."""
+    now = time.time()
+    hit = _cache.get(key)
+    if hit is not None and now - hit[1] < _cache_ttl:
+        return hit[0]
+    result = query_func()
+    _cache[key] = (result, now)
+    return result
 
 
 app = FastAPI(
@@ -82,6 +100,20 @@ app.add_middleware(
     allow_methods=["GET"],
     allow_headers=["*"],
 )
+
+
+@app.middleware("http")
+async def _cache_headers(request, call_next):
+    """Add HTTP cache headers to deterministic, TTL-cached endpoints so CDN /
+    browser caches can serve repeat hits without hitting the API."""
+    response = await call_next(request)
+    if request.method == "GET" and request.url.path in {
+        "/tags/top-rated",
+        "/hot",
+        "/sleepers",
+    }:
+        response.headers["Cache-Control"] = "public, max-age=3600"
+    return response
 
 
 VALID_SOURCES = {"arxiv", "openreview", "biorxiv", "medrxiv", "chemrxiv"}
@@ -254,36 +286,41 @@ def tags_top_rated(
     min_papers: Annotated[int, Query(ge=1, le=200)] = 10,
 ) -> dict:
     """Tags ordered by mean OpenReview reviewer rating across papers tagged with them."""
-    with ch_connect() as c:
-        rows = c.query(
-            """
-            WITH paper_avg_rating AS (
-                SELECT paper_id, avg(rating) AS avg_rating, count() AS n_reviews
-                FROM openreview_reviews
-                WHERE rating IS NOT NULL
-                GROUP BY paper_id
-                HAVING n_reviews >= 3
-            )
-            SELECT tag, round(avg(par.avg_rating), 2) AS mean_rating, count() AS n_papers,
-                   round(quantile(0.9)(par.avg_rating), 2) AS p90_rating
-            FROM paper_tags t FINAL
-            ARRAY JOIN tags AS tag
-            JOIN paper_avg_rating par ON par.paper_id = t.paper_id
-            WHERE t.tagger = 'spacy_v2'
-            GROUP BY tag
-            HAVING n_papers >= %(min_papers)s
-            ORDER BY mean_rating DESC
-            LIMIT %(limit)s
-            """,
-            parameters={"min_papers": min_papers, "limit": limit},
-        ).result_rows
-    return {
-        "count": len(rows),
-        "tags": [
-            {"tag": r[0], "mean_rating": float(r[1] or 0), "n_papers": int(r[2]), "p90_rating": float(r[3] or 0)}
-            for r in rows
-        ],
-    }
+    key = ("tags_top_rated", limit, min_papers)
+
+    def _run() -> dict:
+        with ch_connect() as c:
+            rows = c.query(
+                """
+                WITH paper_avg_rating AS (
+                    SELECT paper_id, avg(rating) AS avg_rating, count() AS n_reviews
+                    FROM openreview_reviews
+                    WHERE rating IS NOT NULL
+                    GROUP BY paper_id
+                    HAVING n_reviews >= 3
+                )
+                SELECT tag, round(avg(par.avg_rating), 2) AS mean_rating, count() AS n_papers,
+                       round(quantile(0.9)(par.avg_rating), 2) AS p90_rating
+                FROM paper_tags t FINAL
+                ARRAY JOIN tags AS tag
+                JOIN paper_avg_rating par ON par.paper_id = t.paper_id
+                WHERE t.tagger = 'spacy_v2'
+                GROUP BY tag
+                HAVING n_papers >= %(min_papers)s
+                ORDER BY mean_rating DESC
+                LIMIT %(limit)s
+                """,
+                parameters={"min_papers": min_papers, "limit": limit},
+            ).result_rows
+        return {
+            "count": len(rows),
+            "tags": [
+                {"tag": r[0], "mean_rating": float(r[1] or 0), "n_papers": int(r[2]), "p90_rating": float(r[3] or 0)}
+                for r in rows
+            ],
+        }
+
+    return _cached(key, _run)
 
 
 @app.get("/tags/{tag}")
@@ -369,8 +406,8 @@ def semantic_search(
 ) -> dict:
     """Semantic search over abstract+title embeddings (all-MiniLM-L6-v2, 384-dim, cosine).
 
-    In lean API mode (default), encodes the query in a subprocess so the server
-    never keeps the embedder resident.
+    The encoder is loaded lazily in-process on first request and kept resident
+    for subsequent queries (no per-request subprocess).
     """
     q_emb = _encode_query(q)
 
@@ -430,41 +467,46 @@ def sleepers(
 
     The "look what the field is missing" leaderboard.
     """
-    with ch_connect() as c:
-        rows = c.query(
-            f"""
-            WITH par AS (
-              SELECT paper_id, avg(rating) AS avg_rating, count() AS n_reviews,
-                     any(decision) AS decision, any(venue) AS venue
-              FROM openreview_reviews WHERE rating IS NOT NULL
-              GROUP BY paper_id HAVING n_reviews >= 3
-            )
-            SELECT p.paper_id,
-                   {EFFECTIVE_TITLE_SQL} AS title,
-                   par.avg_rating, par.n_reviews,
-                   {EFFECTIVE_CITATION_SQL} AS citation_count,
-                   par.venue, par.decision, p.submitted_date
-            FROM par
-            JOIN papers p ON p.paper_id = par.paper_id
-            {OVERLAY_JOINS_SQL}
-            WHERE par.avg_rating >= %(min_rating)s
-              AND {EFFECTIVE_CITATION_SQL} <= %(max_citations)s
-              AND effective_year(p.source, p.arxiv_id, p.submitted_date) >= %(since_year)s
-            ORDER BY par.avg_rating DESC, citation_count ASC
-            LIMIT %(limit)s
-            """,
-            parameters={"min_rating": min_rating, "max_citations": max_citations,
-                        "since_year": since_year, "limit": limit},
-        ).result_rows
-    return {
-        "count": len(rows),
-        "results": [
-            {"paper_id": r[0], "title": r[1], "avg_rating": round(float(r[2]), 2),
-             "n_reviews": int(r[3]), "citation_count": int(r[4] or 0),
-             "venue": r[5], "decision": r[6], "submitted_date": str(r[7]) if r[7] else None}
-            for r in rows
-        ],
-    }
+    key = ("sleepers", min_rating, max_citations, since_year, limit)
+
+    def _run() -> dict:
+        with ch_connect() as c:
+            rows = c.query(
+                f"""
+                WITH par AS (
+                  SELECT paper_id, avg(rating) AS avg_rating, count() AS n_reviews,
+                         any(decision) AS decision, any(venue) AS venue
+                  FROM openreview_reviews WHERE rating IS NOT NULL
+                  GROUP BY paper_id HAVING n_reviews >= 3
+                )
+                SELECT p.paper_id,
+                       {EFFECTIVE_TITLE_SQL} AS title,
+                       par.avg_rating, par.n_reviews,
+                       {EFFECTIVE_CITATION_SQL} AS citation_count,
+                       par.venue, par.decision, p.submitted_date
+                FROM par
+                JOIN papers p ON p.paper_id = par.paper_id
+                {OVERLAY_JOINS_SQL}
+                WHERE par.avg_rating >= %(min_rating)s
+                  AND {EFFECTIVE_CITATION_SQL} <= %(max_citations)s
+                  AND effective_year(p.source, p.arxiv_id, p.submitted_date) >= %(since_year)s
+                ORDER BY par.avg_rating DESC, citation_count ASC
+                LIMIT %(limit)s
+                """,
+                parameters={"min_rating": min_rating, "max_citations": max_citations,
+                            "since_year": since_year, "limit": limit},
+            ).result_rows
+        return {
+            "count": len(rows),
+            "results": [
+                {"paper_id": r[0], "title": r[1], "avg_rating": round(float(r[2]), 2),
+                 "n_reviews": int(r[3]), "citation_count": int(r[4] or 0),
+                 "venue": r[5], "decision": r[6], "submitted_date": str(r[7]) if r[7] else None}
+                for r in rows
+            ],
+        }
+
+    return _cached(key, _run)
 
 
 @app.get("/similar/{paper_id:path}")
@@ -563,55 +605,60 @@ def hot_papers(
     Score = 0.5 * log1p(cites_per_year) + 0.3 * (avg_rating/10 or 0.5)
             + 0.2 * pagerank*10000
     """
-    with ch_connect() as c:
-        rows = c.query(
-            f"""
-            WITH par AS (
-              SELECT paper_id, avg(rating) AS avg_rating
-              FROM openreview_reviews WHERE rating IS NOT NULL
-              GROUP BY paper_id HAVING count() >= 3
-            )
-            SELECT p.paper_id, p.source,
-                   {EFFECTIVE_TITLE_SQL} AS title,
-                   {EFFECTIVE_CITATION_SQL} AS citation_count,
-                   p.submitted_date,
-                   round(citation_count / greatest(
-                     (today() - effective_date(p.source, p.arxiv_id, p.submitted_date)) / 365.25,
-                     0.25), 1) AS cpy,
-                   coalesce(par.avg_rating, 0) AS rating,
-                   coalesce(s.pagerank, p.pagerank_score, 0) AS pr,
-                   round(
-                     0.5 * log(1 + citation_count / greatest(
-                       (today() - effective_date(p.source, p.arxiv_id, p.submitted_date)) / 365.25,
-                       0.25))
-                     + 0.3 * coalesce(par.avg_rating, 5.0) / 10
-                     + 0.2 * coalesce(s.pagerank, p.pagerank_score, 0) * 10000,
-                   3) AS hotness
-            FROM papers AS p FINAL
-            LEFT JOIN par ON par.paper_id = p.paper_id
-            {OVERLAY_JOINS_SQL}
-            LEFT JOIN paper_scores_v2 AS s FINAL ON s.paper_id = p.paper_id
-            WHERE p.submitted_date IS NOT NULL
-              AND effective_year(p.source, p.arxiv_id, p.submitted_date) >= %(year)s
-              AND {EFFECTIVE_CITATION_SQL} >= 5
-            ORDER BY hotness DESC
-            LIMIT %(limit)s
-            """,
-            parameters={"year": since_year, "limit": limit},
-        ).result_rows
-    return {
-        "count": len(rows),
-        "results": [
-            {"paper_id": r[0], "source": r[1], "title": r[2],
-             "citation_count": int(r[3] or 0),
-             "submitted_date": str(r[4]) if r[4] else None,
-             "cites_per_year": float(r[5]),
-             "avg_rating": round(float(r[6]), 2) if r[6] else None,
-             "pagerank": float(r[7]),
-             "hotness": float(r[8])}
-            for r in rows
-        ],
-    }
+    key = ("hot", limit, since_year)
+
+    def _run() -> dict:
+        with ch_connect() as c:
+            rows = c.query(
+                f"""
+                WITH par AS (
+                  SELECT paper_id, avg(rating) AS avg_rating
+                  FROM openreview_reviews WHERE rating IS NOT NULL
+                  GROUP BY paper_id HAVING count() >= 3
+                )
+                SELECT p.paper_id, p.source,
+                       {EFFECTIVE_TITLE_SQL} AS title,
+                       {EFFECTIVE_CITATION_SQL} AS citation_count,
+                       p.submitted_date,
+                       round(citation_count / greatest(
+                         (today() - effective_date(p.source, p.arxiv_id, p.submitted_date)) / 365.25,
+                         0.25), 1) AS cpy,
+                       coalesce(par.avg_rating, 0) AS rating,
+                       coalesce(s.pagerank, p.pagerank_score, 0) AS pr,
+                       round(
+                         0.5 * log(1 + citation_count / greatest(
+                           (today() - effective_date(p.source, p.arxiv_id, p.submitted_date)) / 365.25,
+                           0.25))
+                         + 0.3 * coalesce(par.avg_rating, 5.0) / 10
+                         + 0.2 * coalesce(s.pagerank, p.pagerank_score, 0) * 10000,
+                       3) AS hotness
+                FROM papers AS p FINAL
+                LEFT JOIN par ON par.paper_id = p.paper_id
+                {OVERLAY_JOINS_SQL}
+                LEFT JOIN paper_scores_v2 AS s FINAL ON s.paper_id = p.paper_id
+                WHERE p.submitted_date IS NOT NULL
+                  AND effective_year(p.source, p.arxiv_id, p.submitted_date) >= %(year)s
+                  AND {EFFECTIVE_CITATION_SQL} >= 5
+                ORDER BY hotness DESC
+                LIMIT %(limit)s
+                """,
+                parameters={"year": since_year, "limit": limit},
+            ).result_rows
+        return {
+            "count": len(rows),
+            "results": [
+                {"paper_id": r[0], "source": r[1], "title": r[2],
+                 "citation_count": int(r[3] or 0),
+                 "submitted_date": str(r[4]) if r[4] else None,
+                 "cites_per_year": float(r[5]),
+                 "avg_rating": round(float(r[6]), 2) if r[6] else None,
+                 "pagerank": float(r[7]),
+                 "hotness": float(r[8])}
+                for r in rows
+            ],
+        }
+
+    return _cached(key, _run)
 
 
 @app.get("/authors/by-tag/{tag}")

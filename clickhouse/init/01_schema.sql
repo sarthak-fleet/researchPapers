@@ -36,7 +36,11 @@ CREATE TABLE IF NOT EXISTS papers
     updated_at        DateTime DEFAULT now(),
 
     -- vector embedding for semantic search (populated by separate job)
-    abstract_embedding Array(Float32)                  -- size depends on encoder (384 or 768)
+    abstract_embedding Array(Float32),                 -- size depends on encoder (384 or 768)
+
+    -- secondary indexes to prune granules on common analytical filters
+    INDEX idx_citation citation_count TYPE minmax GRANULARITY 1,
+    INDEX idx_date submitted_date TYPE minmax GRANULARITY 1
 )
 ENGINE = ReplacingMergeTree(updated_at)
 ORDER BY (source, source_id)
@@ -137,7 +141,34 @@ CREATE TABLE IF NOT EXISTS openreview_reviews
     questions      Nullable(String),
     decision       LowCardinality(Nullable(String)), -- 'Accept', 'Reject', 'Withdraw', etc.
     posted_at      Nullable(DateTime),
-    ingested_at    DateTime DEFAULT now()
+    ingested_at    DateTime DEFAULT now(),
+
+    INDEX idx_venue venue TYPE set(100) GRANULARITY 1
 )
 ENGINE = ReplacingMergeTree(ingested_at)
 ORDER BY (paper_id, review_id);
+
+------------------------------------------------------------------------
+-- paper_embeddings: 384-dim L2-normalised vectors (all-MiniLM-L6-v2) for
+-- semantic search. Created here (not at runtime) so fresh deploys get the
+-- vector_similarity index. Existing deployments apply 04_indexes.sql.
+--
+-- NOTE: vector_similarity is EXPERIMENTAL in ClickHouse 24.10 (GA in 25.8).
+-- Requires `allow_experimental_vector_similarity_index = 1` (set in SETTINGS
+-- below and at query time). The query optimizer only uses the index when the
+-- SELECT's distance function matches the index ('cosineDistance') and LIMIT
+-- is small (<= max_limit_for_vector_search_queries, default 100).
+------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS paper_embeddings
+(
+    paper_id   String,
+    embedding  Array(Float32),                         -- 384-dim, L2-normalised
+    model      LowCardinality(String),                 -- 'all-MiniLM-L6-v2'
+    ingested_at DateTime DEFAULT now(),
+
+    INDEX vec_idx embedding TYPE vector_similarity('hnsw', 'cosineDistance', 384) GRANULARITY 1
+)
+ENGINE = ReplacingMergeTree(ingested_at)
+ORDER BY paper_id
+SETTINGS index_granularity = 8192,
+         allow_experimental_vector_similarity_index = 1;

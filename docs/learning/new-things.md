@@ -26,7 +26,7 @@ Gotcha-focused stubs for novel tech encountered in this project. Concepts alread
 
 - What: 384-dim L2-normalised vectors from all-MiniLM-L6-v2 stored as `Array(Float32)` per row; cosine search is a full scan via `cosineDistance`.
 - Why here: TBD
-- Gotcha (from code): No ANN index (HNSW/IVF) — acceptable at 478k vectors; would need a separate store at 10M+. The `paper_embeddings` table is a plain `ReplacingMergeTree` with no `vector_similarity` index (`clickhouse/init/01_schema.sql` — no such index declared).
+- Gotcha (from code): A `vector_similarity` (HNSW, cosine) index was added to `paper_embeddings` in `clickhouse/init/01_schema.sql` (experimental in ClickHouse 24.10, GA in 25.8 — requires `allow_experimental_vector_similarity_index = 1`). The query optimizer only uses it when the SELECT distance function matches (`cosineDistance`) and LIMIT ≤ `max_limit_for_vector_search_queries` (default 100). Existing deployments apply `clickhouse/init/04_indexes.sql` + `MATERIALIZE INDEX`.
 - Source: See [external-references.md](external-references.md) → sentence-transformers / Cosine distance in ClickHouse
 
 ---

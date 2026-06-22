@@ -341,7 +341,7 @@ src/researchpapers/
   overlays.py           shared overlay SQL + table DDL
   ram.py                RAM waits + M1 16 GB profile
   warm_update.py        one-command overlay refresh
-  encode_query.py       one-shot query encoder for lean API
+  encode_query.py       one-shot query encoder (CLI `papers encode-query`); API loads the encoder in-process lazily
   pagerank_full.py      scipy.sparse PageRank → paper_scores_v2
   embed.py              sentence-transformers → paper_embeddings
   cluster_embeddings.py MiniBatchKMeans → paper_clusters
