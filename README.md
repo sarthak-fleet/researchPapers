@@ -109,7 +109,7 @@ All under the FastAPI server (`uv run papers api-serve`):
 | `GET /authors/by-id/{openalex_id}` | full author profile |
 | `GET /reviews/top-rated` | best-reviewed OpenReview papers |
 | `GET /rag/status` | server-side Knowledgebase RAG wiring status, without exposing secrets |
-| `POST /rag/query` | cited answers over the seeded `research-papers` Knowledgebase domain |
+| `POST /rag/query` | cited answers over the seeded `research-papers-cited1000-v2` Knowledgebase domain |
 
 ### RAG answer demo
 
@@ -127,18 +127,25 @@ Required runtime env for the full Knowledgebase RAG path:
 ```bash
 export RAG_SERVICE_KEY="<service-key>"
 export RAG_SERVICE_URL="https://knowledgebase.sarthakagrawal927.workers.dev"
-export RAG_DOMAIN="research-papers"
+export RAG_DOMAIN="research-papers-cited1000-v2"
 ```
 
-Seed the demo domain from the already-exported website data:
+Seed the demo domain from high-citation OpenAlex Computer Science papers with
+local BGE embeddings:
 
 ```bash
-RAG_SERVICE_KEY="<service-key>" uv run python scripts/seed_knowledgebase_rag.py
+RAG_SERVICE_KEY="<service-key>" uv run python scripts/seed_openalex_cs_rag.py \
+  --live \
+  --vector-ingest \
+  --local-embedding-backend sentence-transformers \
+  --domain research-papers-cited1000-v2 \
+  --state data/openalex-cs-cited1000-bge-st-kb-seed-state.json \
+  --max-records 3863
 ```
 
-This seeds a representative demo slice, not the full corpus: top papers, hot
-papers, sleepers, top reviewed papers, semantic clusters, abstract clusters,
-and tag-rating samples.
+This seeds the current `cited_by_count > 999` OpenAlex Computer Science slice:
+3,863 paper records/chunks as of June 24, 2026. Query-time embedding still runs
+through Knowledgebase/Cloudflare; ingestion embeddings are generated locally.
 
 ## Using the data
 

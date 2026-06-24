@@ -17,11 +17,12 @@ from __future__ import annotations
 import argparse
 import gzip
 import json
+import math
 import os
 import sys
 import time
 from pathlib import Path
-from typing import Any
+from typing import Any, Protocol
 
 import httpx
 
@@ -31,6 +32,12 @@ DEFAULT_DOMAIN = "research-papers"
 DEFAULT_RECORD_TYPE = "PaperSignal"
 DEFAULT_STATE_PATH = ROOT / "data" / "openalex-cs-cited1000-kb-seed-state.json"
 DEFAULT_SHARD_DIR = ROOT / "data" / "openalex-cs-cited1000-shards"
+DEFAULT_VECTOR_EMBEDDING_MODEL = "@cf/baai/bge-base-en-v1.5"
+DEFAULT_VECTOR_EMBEDDING_PROVIDER = "workers_ai"
+DEFAULT_LOCAL_EMBEDDING_MODEL = "bge-base-en-v1.5"
+DEFAULT_LOCAL_ST_MODEL = "BAAI/bge-base-en-v1.5"
+DEFAULT_LOCAL_EMBEDDING_DIMENSIONS = 768
+MAX_RECORD_INDEX_TEXT_CHARS = 1800
 OPENALEX_WORKS_URL = "https://api.openalex.org/works"
 OPENALEX_FILTER = ",".join(
     [
@@ -199,6 +206,318 @@ def compact_work(work: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def string_field(record: dict[str, Any], key: str) -> str | None:
+    value = record.get(key)
+    if isinstance(value, str) and value.strip():
+        return value.strip()
+    return None
+
+
+def list_field(record: dict[str, Any], key: str) -> list[str]:
+    value = record.get(key)
+    if not isinstance(value, list):
+        return []
+    return [item.strip() for item in value if isinstance(item, str) and item.strip()]
+
+
+def clamp_index_text(value: str) -> str:
+    if len(value) <= MAX_RECORD_INDEX_TEXT_CHARS:
+        return value
+    clipped = value[:MAX_RECORD_INDEX_TEXT_CHARS].rsplit(" ", 1)[0].rstrip()
+    return f"{clipped or value[:MAX_RECORD_INDEX_TEXT_CHARS].rstrip()}..."
+
+
+def structured_record_index_text(record: dict[str, Any]) -> str:
+    rag_text = string_field(record, "rag_text")
+    if rag_text:
+        return clamp_index_text(rag_text)
+
+    author_names = list_field(record, "author_names")
+    topics = list_field(record, "topics")
+    rows = [
+        ("Title", string_field(record, "title")),
+        ("Abstract", string_field(record, "abstract")),
+        ("Summary", string_field(record, "summary")),
+        ("Authors", ", ".join(author_names) if author_names else None),
+        ("Primary topic", string_field(record, "primary_topic")),
+        ("Subfield", string_field(record, "subfield")),
+        ("Source", string_field(record, "source_name")),
+        (
+            "Publication year",
+            None if record.get("publication_year") is None else str(record.get("publication_year")),
+        ),
+        (
+            "Citations",
+            None if record.get("citation_count") is None else str(record.get("citation_count")),
+        ),
+        ("Topics", ", ".join(topics) if topics else None),
+        ("URL", string_field(record, "url")),
+        ("PDF link", string_field(record, "pdf_url")),
+        ("OpenAlex URL", string_field(record, "openalex_url")),
+        ("DOI", string_field(record, "doi")),
+    ]
+    lines = [f"{label}: {value}" for label, value in rows if value]
+    return clamp_index_text("\n".join(lines) if lines else json.dumps(record, sort_keys=True))
+
+
+def chunk_text(text: str, *, size: int = 2000, overlap: int = 200) -> list[str]:
+    size = max(100, min(size, 8000))
+    overlap = max(0, min(overlap, size - 1))
+    chunks_out: list[str] = []
+    if not text:
+        return chunks_out
+
+    current = ""
+    for paragraph in text.split("\n\n"):
+        if len(current) + len(paragraph) <= size:
+            separator = "\n\n" if current else ""
+            current += f"{separator}{paragraph}"
+            continue
+
+        if current:
+            chunks_out.append(current)
+            current = ""
+
+        if len(paragraph) > size:
+            remaining = paragraph
+            while remaining:
+                chunks_out.append(remaining[:size])
+                remaining = remaining[size - overlap :]
+                if len(remaining) <= overlap:
+                    break
+        else:
+            current = paragraph
+
+    if current:
+        chunks_out.append(current)
+    return chunks_out
+
+
+def l2_normalize(vector: list[float]) -> list[float]:
+    norm = math.sqrt(sum(value * value for value in vector))
+    if norm <= 0:
+        return vector
+    return [value / norm for value in vector]
+
+
+class LocalEmbedder(Protocol):
+    model_label: str
+
+    def embed(self, texts: list[str]) -> list[list[float]]:
+        ...
+
+
+class LmStudioEmbedder:
+    def __init__(
+        self,
+        *,
+        client: httpx.Client,
+        base_url: str,
+        model: str,
+        expected_dimensions: int,
+    ) -> None:
+        self.client = client
+        self.base_url = base_url.rstrip("/")
+        self.requested_model = model
+        self.expected_dimensions = expected_dimensions
+        self.model_label = self._resolve_model(model)
+
+    def _resolve_model(self, requested: str) -> str:
+        try:
+            response = self.client.get(f"{self.base_url}/models")
+            response.raise_for_status()
+            rows = response.json().get("data")
+        except Exception:
+            return requested
+        if not isinstance(rows, list):
+            return requested
+        ids = [str(row.get("id") or "") for row in rows if isinstance(row, dict)]
+        if requested in ids:
+            return requested
+        needle = requested.lower()
+        for model_id in ids:
+            if needle in model_id.lower() or "bge-base-en-v1.5" in model_id.lower():
+                return model_id
+        return requested
+
+    def embed(self, texts: list[str]) -> list[list[float]]:
+        if not texts:
+            return []
+        response = self.client.post(
+            f"{self.base_url}/embeddings",
+            json={"model": self.model_label, "input": texts},
+        )
+        response.raise_for_status()
+        rows = response.json().get("data")
+        if not isinstance(rows, list):
+            raise RuntimeError("LM Studio embedding response missing data array")
+        ordered = sorted(rows, key=lambda row: row.get("index", 0) if isinstance(row, dict) else 0)
+        vectors: list[list[float]] = []
+        for index, row in enumerate(ordered):
+            if not isinstance(row, dict) or not isinstance(row.get("embedding"), list):
+                raise RuntimeError(f"LM Studio embedding response row {index} missing embedding")
+            vector = [float(value) for value in row["embedding"]]
+            if len(vector) != self.expected_dimensions:
+                raise RuntimeError(
+                    "LM Studio embedding dimension mismatch: "
+                    f"expected {self.expected_dimensions}, got {len(vector)}"
+                )
+            vectors.append(l2_normalize(vector))
+        if len(vectors) != len(texts):
+            raise RuntimeError(f"LM Studio returned {len(vectors)} vectors for {len(texts)} texts")
+        return vectors
+
+
+class SentenceTransformersEmbedder:
+    def __init__(self, *, model: str, batch_size: int, expected_dimensions: int) -> None:
+        from sentence_transformers import SentenceTransformer
+
+        self.model_label = model
+        self.batch_size = batch_size
+        self.expected_dimensions = expected_dimensions
+        self.model = SentenceTransformer(model)
+
+    def embed(self, texts: list[str]) -> list[list[float]]:
+        embeddings = self.model.encode(
+            texts,
+            batch_size=self.batch_size,
+            normalize_embeddings=True,
+            show_progress_bar=False,
+        )
+        vectors = [embedding.tolist() for embedding in embeddings]
+        for index, vector in enumerate(vectors):
+            if len(vector) != self.expected_dimensions:
+                raise RuntimeError(
+                    "sentence-transformers embedding dimension mismatch: "
+                    f"expected {self.expected_dimensions}, got {len(vector)} at row {index}"
+                )
+        return vectors
+
+
+def vector_metadata(
+    record: dict[str, Any],
+    *,
+    domain: str,
+    record_type: str,
+    local_embedding_model: str,
+) -> dict[str, Any]:
+    return {
+        "domain": domain,
+        "entity_type": record_type,
+        "source": "openalex",
+        "record_kind": record.get("record_kind"),
+        "collection": record.get("collection"),
+        "paper_id": record.get("paper_id"),
+        "openalex_id": record.get("openalex_id"),
+        "title": record.get("title"),
+        "publication_year": record.get("publication_year"),
+        "citation_count": record.get("citation_count"),
+        "primary_topic": record.get("primary_topic"),
+        "subfield": record.get("subfield"),
+        "field": record.get("field"),
+        "source_name": record.get("source_name"),
+        "url": record.get("url"),
+        "pdf_url": record.get("pdf_url"),
+        "doi": record.get("doi"),
+        "author_names": list_field(record, "author_names")[:8],
+        "topics": list_field(record, "topics")[:8],
+        "local_embedding_model": local_embedding_model,
+    }
+
+
+def vector_chunks_for_records(
+    records: list[dict[str, Any]],
+    *,
+    domain: str,
+    record_type: str,
+    embedder: LocalEmbedder,
+    chunk_size: int,
+    chunk_overlap: int,
+) -> list[dict[str, Any]]:
+    pending: list[tuple[dict[str, Any], int, str, str, str]] = []
+    for record in records:
+        paper_id = str(record.get("paper_id") or safe_filename(str(record.get("openalex_id") or "")))
+        document_id = f"openalex-cs-cited1000:{paper_id}"
+        content = structured_record_index_text(record)
+        for chunk_index, chunk in enumerate(
+            chunk_text(content, size=chunk_size, overlap=chunk_overlap)
+        ):
+            pending.append((record, chunk_index, chunk, document_id, content))
+
+    embeddings = embedder.embed([row[2] for row in pending])
+    out: list[dict[str, Any]] = []
+    for (record, chunk_index, chunk, document_id, content), embedding in zip(
+        pending, embeddings, strict=True
+    ):
+        out.append(
+            {
+                "id": f"{document_id}:chunk:{chunk_index}",
+                "document_id": document_id,
+                "document_content": content,
+                "document_external_id": record.get("openalex_id") or record.get("paper_id"),
+                "content": chunk,
+                "embedding": embedding,
+                "chunk_index": chunk_index,
+                "metadata": vector_metadata(
+                    record,
+                    domain=domain,
+                    record_type=record_type,
+                    local_embedding_model=embedder.model_label,
+                ),
+            }
+        )
+    return out
+
+
+def ensure_vector_index(
+    client: httpx.Client,
+    *,
+    base_url: str,
+    key: str,
+    domain: str,
+    embedding_model: str,
+    embedding_provider: str,
+    expected_dimensions: int,
+    attempts: int,
+) -> dict[str, Any]:
+    headers = {"Authorization": f"Bearer {key}", "Content-Type": "application/json"}
+    indexes_resp = client.get(f"{base_url}/v1/indexes", headers=headers)
+    indexes_resp.raise_for_status()
+    indexes = indexes_resp.json().get("data")
+    external_id = f"kb:{domain}"
+    if isinstance(indexes, list):
+        for index in indexes:
+            if isinstance(index, dict) and index.get("external_id") == external_id:
+                dimensions = int(index.get("dimensions") or 0)
+                if dimensions != expected_dimensions:
+                    raise RuntimeError(
+                        f"existing index {index.get('id')} is {dimensions}d, "
+                        f"expected {expected_dimensions}d"
+                    )
+                return index
+
+    create_resp = post_with_retries(
+        client,
+        f"{base_url}/v1/indexes",
+        headers=headers,
+        json_body={
+            "name": f"Knowledgebase {domain}",
+            "external_id": external_id,
+            "embedding_model": embedding_model,
+            "embedding_provider": embedding_provider,
+        },
+        attempts=attempts,
+    )
+    create_resp.raise_for_status()
+    created = create_resp.json()
+    dimensions = int(created.get("dimensions") or 0)
+    if dimensions != expected_dimensions:
+        raise RuntimeError(
+            f"created index {created.get('id')} is {dimensions}d, expected {expected_dimensions}d"
+        )
+    return created
+
+
 def load_state(path: Path) -> dict[str, Any]:
     if not path.exists():
         return {
@@ -320,6 +639,25 @@ def main() -> int:
     parser.add_argument("--record-type", default=os.environ.get("RAG_RECORD_TYPE", DEFAULT_RECORD_TYPE))
     parser.add_argument("--embedding-model", default=os.environ.get("RAG_EMBEDDING_MODEL"))
     parser.add_argument("--embedding-provider", default=os.environ.get("RAG_EMBEDDING_PROVIDER"))
+    parser.add_argument("--vector-ingest", action="store_true")
+    parser.add_argument(
+        "--local-embedding-backend",
+        choices=["lmstudio", "sentence-transformers"],
+        default=os.environ.get("RAG_LOCAL_EMBEDDING_BACKEND", "lmstudio"),
+    )
+    parser.add_argument(
+        "--local-embedding-model",
+        default=os.environ.get("RAG_LOCAL_EMBEDDING_MODEL"),
+    )
+    parser.add_argument(
+        "--lmstudio-url",
+        default=os.environ.get("LMSTUDIO_BASE_URL", "http://127.0.0.1:1234/v1"),
+    )
+    parser.add_argument("--expected-dimensions", type=int, default=DEFAULT_LOCAL_EMBEDDING_DIMENSIONS)
+    parser.add_argument("--vector-batch-size", type=int, default=50)
+    parser.add_argument("--local-embedding-batch-size", type=int, default=32)
+    parser.add_argument("--chunk-size", type=int, default=2000)
+    parser.add_argument("--chunk-overlap", type=int, default=200)
     parser.add_argument("--state", type=Path, default=DEFAULT_STATE_PATH)
     parser.add_argument("--per-page", type=int, default=200)
     parser.add_argument("--batch-size", type=int, default=10)
@@ -343,6 +681,15 @@ def main() -> int:
         return 2
     if args.batch_size < 1 or args.batch_size > 200:
         print("--batch-size must be between 1 and 200", file=sys.stderr)
+        return 2
+    if args.vector_batch_size < 1 or args.vector_batch_size > 200:
+        print("--vector-batch-size must be between 1 and 200", file=sys.stderr)
+        return 2
+    if args.local_embedding_batch_size < 1 or args.local_embedding_batch_size > 200:
+        print("--local-embedding-batch-size must be between 1 and 200", file=sys.stderr)
+        return 2
+    if args.expected_dimensions < 1:
+        print("--expected-dimensions must be positive", file=sys.stderr)
         return 2
     if args.run_budget < 1:
         print("--run-budget must be positive", file=sys.stderr)
@@ -380,7 +727,8 @@ def main() -> int:
             f"mode={'live' if args.live else 'dry-run'} "
             f"batch_size={args.batch_size} sleep={args.sleep}s run_budget={args.run_budget} "
             f"write_shards={args.write_shards} record_type={args.record_type} "
-            f"embedding_model={args.embedding_model or 'domain-default'}",
+            f"embedding_model={args.embedding_model or 'domain-default'} "
+            f"vector_ingest={args.vector_ingest}",
             flush=True,
         )
         if args.dry_run:
@@ -400,6 +748,9 @@ def main() -> int:
             return 2
 
         base_url = args.base_url.rstrip("/")
+        if args.vector_ingest:
+            args.embedding_model = args.embedding_model or DEFAULT_VECTOR_EMBEDDING_MODEL
+            args.embedding_provider = args.embedding_provider or DEFAULT_VECTOR_EMBEDDING_PROVIDER
         embedding_selection = {
             **({"embedding_model": args.embedding_model.strip()} if args.embedding_model and args.embedding_model.strip() else {}),
             **({"embedding_provider": args.embedding_provider.strip()} if args.embedding_provider and args.embedding_provider.strip() else {}),
@@ -421,6 +772,38 @@ def main() -> int:
         )
         if domain_resp.status_code not in {200, 201, 409}:
             domain_resp.raise_for_status()
+
+        vector_index: dict[str, Any] | None = None
+        embedder: LocalEmbedder | None = None
+        if args.vector_ingest:
+            vector_index = ensure_vector_index(
+                client,
+                base_url=base_url,
+                key=key,
+                domain=args.domain,
+                embedding_model=args.embedding_model,
+                embedding_provider=args.embedding_provider,
+                expected_dimensions=args.expected_dimensions,
+                attempts=args.retries,
+            )
+            if args.local_embedding_backend == "lmstudio":
+                embedder = LmStudioEmbedder(
+                    client=client,
+                    base_url=args.lmstudio_url,
+                    model=args.local_embedding_model or DEFAULT_LOCAL_EMBEDDING_MODEL,
+                    expected_dimensions=args.expected_dimensions,
+                )
+            else:
+                embedder = SentenceTransformersEmbedder(
+                    model=args.local_embedding_model or DEFAULT_LOCAL_ST_MODEL,
+                    batch_size=args.local_embedding_batch_size,
+                    expected_dimensions=args.expected_dimensions,
+                )
+            print(
+                f"vector ingest index={vector_index.get('id')} dimensions={vector_index.get('dimensions')} "
+                f"local_backend={args.local_embedding_backend} local_model={embedder.model_label}",
+                flush=True,
+            )
 
         page = first_page
         run_posted = 0
@@ -447,23 +830,55 @@ def main() -> int:
                 state["batches_posted"] = int(state.get("batches_posted") or 0) + 1
                 batch_no = int(state["batches_posted"])
                 ids = [str(row.get("paper_id") or row.get("openalex_id")) for row in batch]
-                resp = post_with_retries(
-                    client,
-                    f"{base_url}/v1/kb/ingest/record",
-                    headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
-                    json_body={
-                        "domain": args.domain,
-                        "type": args.record_type,
-                        "data": batch,
-                        "idempotency_key": f"openalex-cs-cited1000-v1-{ids[0]}-{ids[-1]}-{len(batch)}",
-                        **embedding_selection,
-                    },
-                    attempts=args.retries,
-                )
-                if resp.status_code >= 400:
-                    print(f"ingest failed HTTP {resp.status_code}: {resp.text[:1000]}", file=sys.stderr)
-                resp.raise_for_status()
-                body = resp.json()
+                if args.vector_ingest:
+                    if vector_index is None or embedder is None:
+                        raise RuntimeError("vector ingest was not initialized")
+                    vector_chunks = vector_chunks_for_records(
+                        batch,
+                        domain=args.domain,
+                        record_type=args.record_type,
+                        embedder=embedder,
+                        chunk_size=args.chunk_size,
+                        chunk_overlap=args.chunk_overlap,
+                    )
+                    upserted = 0
+                    for vector_batch in chunks(vector_chunks, args.vector_batch_size):
+                        resp = post_with_retries(
+                            client,
+                            f"{base_url}/v1/indexes/{vector_index['id']}/ingest-vectors",
+                            headers={
+                                "Authorization": f"Bearer {key}",
+                                "Content-Type": "application/json",
+                            },
+                            json_body={"chunks": vector_batch},
+                            attempts=args.retries,
+                        )
+                        if resp.status_code >= 400:
+                            print(
+                                f"vector ingest failed HTTP {resp.status_code}: {resp.text[:1000]}",
+                                file=sys.stderr,
+                            )
+                        resp.raise_for_status()
+                        upserted += int(resp.json().get("upserted") or 0)
+                    body = {"chunks_indexed": upserted, "file_id": None}
+                else:
+                    resp = post_with_retries(
+                        client,
+                        f"{base_url}/v1/kb/ingest/record",
+                        headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
+                        json_body={
+                            "domain": args.domain,
+                            "type": args.record_type,
+                            "data": batch,
+                            "idempotency_key": f"openalex-cs-cited1000-v1-{ids[0]}-{ids[-1]}-{len(batch)}",
+                            **embedding_selection,
+                        },
+                        attempts=args.retries,
+                    )
+                    if resp.status_code >= 400:
+                        print(f"ingest failed HTTP {resp.status_code}: {resp.text[:1000]}", file=sys.stderr)
+                    resp.raise_for_status()
+                    body = resp.json()
                 state["records_posted"] = int(state.get("records_posted") or 0) + len(batch)
                 state["page_offset"] = int(state.get("page_offset") or 0) + len(batch)
                 run_posted += len(batch)

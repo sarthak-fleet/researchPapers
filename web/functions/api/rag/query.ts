@@ -49,8 +49,26 @@ type Evidence = {
   score: number;
 };
 
+type LiveCitation = {
+  index?: number;
+  chunk_id?: string;
+  document_id?: string;
+  filename?: string | null;
+  excerpt?: string;
+  score?: number;
+  metadata?: {
+    title?: string;
+    publication_year?: number;
+    citation_count?: number;
+    primary_topic?: string;
+    source_name?: string;
+    author_names?: string[];
+    topics?: string[];
+  };
+};
+
 const DEFAULT_RAG_URL = "https://knowledgebase.sarthakagrawal927.workers.dev";
-const DEFAULT_DOMAIN = "research-papers";
+const DEFAULT_DOMAIN = "research-papers-cited1000-v2";
 
 async function fetchAssetJson<T>(request: Request, path: string): Promise<T> {
   const url = new URL(path, request.url);
@@ -117,6 +135,58 @@ function summarizeEvidence(evidence: Evidence[]): string {
     "",
     "This answer is served from the bundled demo index when the live Knowledgebase RAG service is unavailable. The same endpoint switches to the full server RAG path when the service key is configured.",
   ].join("\n");
+}
+
+function compactCitationSignal(citation: LiveCitation, index: number): string {
+  const metadata = citation.metadata ?? {};
+  const title = metadata.title || citation.excerpt?.match(/^Title:\s*([^\n.]+)/)?.[1] || citation.chunk_id || `Evidence ${index + 1}`;
+  const details = [
+    typeof metadata.publication_year === "number" ? String(metadata.publication_year) : null,
+    typeof metadata.citation_count === "number" ? `${metadata.citation_count.toLocaleString()} citations` : null,
+    metadata.primary_topic,
+    metadata.source_name,
+  ].filter(Boolean);
+  const excerpt = (citation.excerpt ?? "")
+    .replace(/^Title:\s*/i, "")
+    .replace(/\s+/g, " ")
+    .trim();
+  const clipped = excerpt.length > 220 ? `${excerpt.slice(0, 220).replace(/\s+\S*$/, "")}...` : excerpt;
+  return `${index + 1}. ${title}${details.length ? ` (${details.join(" | ")})` : ""}: ${clipped}`;
+}
+
+function polishLiveAnswer(body: unknown, question: string): unknown {
+  if (!body || typeof body !== "object" || Array.isArray(body)) return body;
+  const record = body as Record<string, unknown>;
+  const citations = Array.isArray(record.citations)
+    ? (record.citations.filter((item): item is LiveCitation => Boolean(item && typeof item === "object")) as LiveCitation[])
+    : [];
+  if (citations.length === 0) return body;
+  if (record.ai_used === true && typeof record.answer === "string" && record.answer.trim().length > 80) {
+    return body;
+  }
+
+  const lower = question.toLowerCase();
+  const topic = lower.includes("sleeper")
+    ? "underrated paper signals"
+    : lower.includes("rating")
+      ? "review and rating signals"
+      : lower.includes("cluster")
+        ? "research clusters"
+        : "research signals";
+  const lines = citations.slice(0, 5).map(compactCitationSignal);
+  return {
+    ...record,
+    answer: [
+      `Based on the live high-citation Computer Science RAG index, the strongest ${topic} are:`,
+      ...lines,
+      "",
+      "Read this as retrieval-backed evidence, not a claim that these are the only important papers. The corpus is the current OpenAlex CS slice with more than 999 citations, indexed from metadata, abstracts, and links.",
+    ].join("\n"),
+    answer_mode:
+      typeof record.answer_mode === "string" && record.answer_mode !== "bundled-data"
+        ? `${record.answer_mode}+summary`
+        : "extractive+summary",
+  };
 }
 
 async function staticDemoAnswer(request: Request, question: string): Promise<Response> {
@@ -274,7 +344,7 @@ export async function onRequestPost(context: PagesContext): Promise<Response> {
     return staticDemoAnswer(context.request, question);
   }
 
-  return Response.json(body, {
+  return Response.json(polishLiveAnswer(body, question), {
     headers: {
       "Cache-Control": "no-store",
     },

@@ -13,7 +13,7 @@ export function onRequestGet(context: PagesContext): Response {
     {
       configured: Boolean(context.env.RAG_SERVICE_KEY),
       service_url: context.env.RAG_SERVICE_URL ?? "default",
-      domain: context.env.RAG_DOMAIN ?? "research-papers",
+      domain: context.env.RAG_DOMAIN ?? "research-papers-cited1000-v2",
     },
     {
       headers: {

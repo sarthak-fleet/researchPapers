@@ -63,14 +63,14 @@ See `DEPLOY.md` for LAN/CDN deployment shapes.
 
 - **Corpus build:** ~488k papers across arxiv, OpenReview, bioRxiv, medRxiv with ~1.05M paper→paper edges; full-corpus PageRank → `paper_scores_v2`; MiniLM embeddings (384-d) for all papers; 64 semantic clusters; spaCy noun-chunk tags + MLX premium tagging subset.
 - **Overlay enrichment shipped:** Semantic Scholar enrichment → `citation_overlay_v2`; ArXiv abstract refresh → `abstract_overlay_v2`; author graph → `authors_v2`, `paper_authorships_v2`.
-- **2026-06-24:** Cloudflare Pages demo deployed at `https://research-papers.pages.dev`; frontend no longer defaults to localhost APIs; Research Answer API panel ships a same-origin RAG proxy path. `RAG_SERVICE_KEY` is configured on Pages production and the `research-papers` Knowledgebase domain is seeded with 789 chunks from the curated website export. The bundled-data fallback remains for resilience.
+- **2026-06-24:** Cloudflare Pages demo deployed at `https://research-papers.pages.dev`; frontend no longer defaults to localhost APIs; Research Answer API panel ships a same-origin RAG proxy path. `RAG_SERVICE_KEY` is configured on Pages production and the clean `research-papers-cited1000-v2` Knowledgebase domain is seeded with 3,863 OpenAlex Computer Science papers over 999 citations, using local BGE-base embeddings uploaded through vector ingest. The bundled-data fallback remains for resilience.
 
 ## Products
 
 | Surface | URL / port |
 | --- | --- |
 | Public production | `https://research-papers.pages.dev` (Cloudflare Pages) |
-| Pages RAG Function | `/api/rag/query` on Pages; `RAG_SERVICE_KEY` configured for the live Knowledgebase path |
+| Pages RAG Function | `/api/rag/query` on Pages; `RAG_SERVICE_KEY` configured for the live `research-papers-cited1000-v2` Knowledgebase path |
 | FastAPI (local/deploy) | `http://0.0.0.0:8000` via `uv run papers api-serve` |
 | ClickHouse HTTP | `:8123` (Docker) |
 | Astro dev | `http://127.0.0.1:4321` (`cd web && npm run dev`) |

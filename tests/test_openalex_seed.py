@@ -126,6 +126,82 @@ def test_embedding_selection_can_be_passed_to_knowledgebase(monkeypatch, tmp_pat
     assert posted[1]["embedding_provider"] == "voyage_ai"
 
 
+def test_vector_ingest_posts_local_embeddings_to_index(monkeypatch, tmp_path) -> None:
+    posted: list[tuple[str, dict]] = []
+
+    class FakeResponse:
+        status_code = 201
+        text = "{}"
+
+        def raise_for_status(self) -> None:
+            return None
+
+        def json(self) -> dict:
+            return {"upserted": 1}
+
+    class FakeEmbedder:
+        model_label = "CompendiumLabs/bge-base-en-v1.5-gguf/bge-base-en-v1.5-q8_0.gguf"
+
+        def __init__(self, **_kwargs) -> None:
+            return None
+
+        def embed(self, texts: list[str]) -> list[list[float]]:
+            assert texts
+            return [[1.0] + [0.0] * 767 for _ in texts]
+
+    def fake_fetch_openalex_page(*_args, **_kwargs):
+        return {
+            "meta": {"count": 1, "next_cursor": None},
+            "results": [
+                {
+                    "id": "https://openalex.org/W1",
+                    "title": "One useful retrieval paper",
+                    "cited_by_count": 1000,
+                    "abstract_inverted_index": {"Dense": [0], "retrieval": [1], "works": [2]},
+                }
+            ],
+        }
+
+    def fake_post_with_retries(_client, url, *, json_body, **_kwargs):
+        posted.append((url, json_body))
+        return FakeResponse()
+
+    monkeypatch.setenv("RAG_SERVICE_KEY", "test-key")
+    monkeypatch.setattr(seed_openalex_cs_rag, "fetch_openalex_page", fake_fetch_openalex_page)
+    monkeypatch.setattr(seed_openalex_cs_rag, "post_with_retries", fake_post_with_retries)
+    monkeypatch.setattr(
+        seed_openalex_cs_rag,
+        "ensure_vector_index",
+        lambda *args, **kwargs: {"id": "index-1", "dimensions": 768},
+    )
+    monkeypatch.setattr(seed_openalex_cs_rag, "LmStudioEmbedder", FakeEmbedder)
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "seed_openalex_cs_rag.py",
+            "--live",
+            "--max-records",
+            "1",
+            "--state",
+            str(tmp_path / "seed-state.json"),
+            "--vector-ingest",
+            "--batch-size",
+            "1",
+        ],
+    )
+
+    assert seed_openalex_cs_rag.main() == 0
+    assert posted[0][0].endswith("/v1/kb/domains")
+    assert posted[0][1]["embedding_model"] == "@cf/baai/bge-base-en-v1.5"
+    assert posted[0][1]["embedding_provider"] == "workers_ai"
+    assert posted[1][0].endswith("/v1/indexes/index-1/ingest-vectors")
+    chunk = posted[1][1]["chunks"][0]
+    assert chunk["id"] == "openalex-cs-cited1000:W1:chunk:0"
+    assert len(chunk["embedding"]) == 768
+    assert chunk["metadata"]["local_embedding_model"] == FakeEmbedder.model_label
+
+
 def test_default_invocation_is_dry_run_without_secret(monkeypatch, capsys) -> None:
     def fake_fetch_openalex_page(*_args, **_kwargs):
         return {
