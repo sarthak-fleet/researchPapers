@@ -154,22 +154,6 @@ def compact_work(work: dict[str, Any]) -> dict[str, Any]:
     topics = topic_summary(work)
     authors = compact_authors(work.get("authorships"))
     author_names = [row["name"] for row in authors if row.get("name")]
-    rag_text = "\n".join(
-        part
-        for part in [
-            f"Title: {title}" if title else "",
-            f"Abstract: {abstract}" if abstract else "",
-            f"Authors: {', '.join(author_names)}" if author_names else "",
-            f"Primary topic: {topics['primary_topic']}" if topics["primary_topic"] else "",
-            f"Subfield: {topics['subfield']}" if topics["subfield"] else "",
-            f"Source: {urls['source_name']}" if urls["source_name"] else "",
-            f"Publication year: {work.get('publication_year')}" if work.get("publication_year") else "",
-            f"Citations: {work.get('cited_by_count')}" if work.get("cited_by_count") is not None else "",
-            f"URL: {urls['url']}" if urls["url"] else "",
-            f"PDF link: {urls['pdf_url']}" if urls["pdf_url"] else "",
-        ]
-        if part
-    )
     return {
         "record_kind": "openalex_research_paper",
         "collection": "openalex_cs_cited_1000",
@@ -200,7 +184,6 @@ def compact_work(work: dict[str, Any]) -> dict[str, Any]:
         "is_open_access": urls["is_open_access"],
         "biblio": work.get("biblio") if isinstance(work.get("biblio"), dict) else None,
         "updated_date": work.get("updated_date"),
-        "rag_text": rag_text,
         "summary": " | ".join(
             part
             for part in [

@@ -58,8 +58,7 @@ def test_compact_work_reconstructs_abstract_and_keeps_links_only() -> None:
     assert record["pdf_url"] == "https://example.test/paper.pdf"
     assert record["authors"][0]["name"] == "Ada Lovelace"
     assert record["primary_topic"] == "Distributed Systems"
-    assert record["rag_text"].startswith("Title: A useful systems paper\nAbstract: Fast systems win")
-    assert "PDF link: https://example.test/paper.pdf" in record["rag_text"]
+    assert "rag_text" not in record
     assert "high-citation Computer Science research paper" in record["summary"]
 
 
